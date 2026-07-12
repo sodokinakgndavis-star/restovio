@@ -2,10 +2,12 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { computeRefundDueDate } from "@/lib/data/bookings";
 
-const patchSchema = z.object({
-  status: z.enum(["CONFIRMED", "CANCELLED"]),
-});
+const patchSchema = z.union([
+  z.object({ status: z.enum(["CONFIRMED", "CANCELLED"]) }),
+  z.object({ refundStatus: z.literal("REFUNDED") }),
+]);
 
 export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
@@ -22,7 +24,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
   const body = await request.json();
   const parsed = patchSchema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json({ error: "Statut invalide." }, { status: 400 });
+    return NextResponse.json({ error: "Requête invalide." }, { status: 400 });
   }
 
   const isOwner = booking.userId === session.user.id;
@@ -30,6 +32,25 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
 
   if (!isOwner && !isAdmin) {
     return NextResponse.json({ error: "Non autorisé." }, { status: 403 });
+  }
+
+  // Marquer l'acompte comme remboursé : action réservée à l'admin, une fois le
+  // remboursement (hors plateforme) effectué sous 24h.
+  if ("refundStatus" in parsed.data) {
+    if (!isAdmin) {
+      return NextResponse.json({ error: "Non autorisé." }, { status: 403 });
+    }
+    if (booking.refundStatus !== "PENDING") {
+      return NextResponse.json(
+        { error: "Aucun remboursement en attente pour cette réservation." },
+        { status: 409 }
+      );
+    }
+    const updated = await prisma.booking.update({
+      where: { id },
+      data: { refundStatus: "REFUNDED" },
+    });
+    return NextResponse.json({ booking: updated });
   }
 
   if (isAdmin) {
@@ -57,9 +78,19 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     }
   }
 
+  // Annulation : l'acompte de 50 % déjà versé est remboursé sous 24h (politique simulée,
+  // hors plateforme de paiement — voir section 8 du cahier des charges).
+  const isCancelling = parsed.data.status === "CANCELLED" && booking.status !== "CANCELLED";
+
   const updated = await prisma.booking.update({
     where: { id },
-    data: { status: parsed.data.status },
+    data: {
+      status: parsed.data.status,
+      ...(isCancelling && {
+        refundStatus: "PENDING",
+        refundDueAt: computeRefundDueDate(),
+      }),
+    },
   });
 
   return NextResponse.json({ booking: updated });

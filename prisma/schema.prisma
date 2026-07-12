@@ -31,6 +31,12 @@ enum ContactStatus {
   ARCHIVED
 }
 
+enum RefundStatus {
+  NOT_APPLICABLE
+  PENDING
+  REFUNDED
+}
+
 model User {
   id        String   @id @default(cuid())
   name      String
@@ -65,17 +71,20 @@ model Room {
 }
 
 model Booking {
-  id         String        @id @default(cuid())
-  userId     String
-  roomId     String
-  checkIn    DateTime
-  checkOut   DateTime
-  guests     Int
-  status     BookingStatus @default(PENDING)
-  comment    String?
-  totalPrice Int
-  createdAt  DateTime      @default(now())
-  updatedAt  DateTime      @updatedAt
+  id            String        @id @default(cuid())
+  userId        String
+  roomId        String
+  checkIn       DateTime
+  checkOut      DateTime
+  guests        Int
+  status        BookingStatus @default(PENDING)
+  comment       String?
+  totalPrice    Int
+  depositAmount Int
+  refundStatus  RefundStatus  @default(NOT_APPLICABLE)
+  refundDueAt   DateTime?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Restrict)
   room Room @relation(fields: [roomId], references: [id], onDelete: Restrict)

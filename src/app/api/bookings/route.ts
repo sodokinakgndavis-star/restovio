@@ -3,7 +3,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { bookingSchema } from "@/lib/validators/booking";
 import { isRoomAvailable } from "@/lib/data/rooms";
-import { computeNights } from "@/lib/data/bookings";
+import { computeNights, computeDeposit } from "@/lib/data/bookings";
 
 export async function POST(request: Request) {
   // RG-05 : une réservation ne peut être créée que par un utilisateur authentifié.
@@ -59,6 +59,9 @@ export async function POST(request: Request) {
   // RG-07 : le prix total est calculé et vérifié côté serveur.
   const nights = computeNights(checkIn, checkOut);
   const totalPrice = room.price * nights;
+  // Acompte de 50 % dû à la réservation (paiement simulé, hors plateforme) ; le solde
+  // est réglé sur place à l'arrivée.
+  const depositAmount = computeDeposit(totalPrice);
 
   const booking = await prisma.booking.create({
     data: {
@@ -69,6 +72,7 @@ export async function POST(request: Request) {
       guests: parsed.data.guests,
       comment: parsed.data.comment || null,
       totalPrice,
+      depositAmount,
       status: "PENDING",
     },
   });

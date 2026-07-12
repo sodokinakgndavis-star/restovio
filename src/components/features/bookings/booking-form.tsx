@@ -46,7 +46,9 @@ export function BookingForm({ room }: BookingFormProps) {
     const outDate = new Date(checkOut);
     const nights = Math.round((outDate.getTime() - inDate.getTime()) / (1000 * 60 * 60 * 24));
     if (nights <= 0) return null;
-    return { nights, total: nights * room.price };
+    const total = nights * room.price;
+    const deposit = Math.round(total * 0.5);
+    return { nights, total, deposit, remaining: total - deposit };
   }, [checkIn, checkOut, room.price]);
 
   // Vérification de la disponibilité réelle de la chambre sur la période choisie
@@ -177,13 +179,22 @@ export function BookingForm({ room }: BookingFormProps) {
       </div>
 
       {estimate && (
-        <div className="rounded-md bg-muted p-3 text-sm">
+        <div className="space-y-1.5 rounded-md bg-muted p-3 text-sm">
           <p>
             {estimate.nights} nuit(s) — estimation :{" "}
             <span className="font-semibold">{formatPrice(estimate.total)}</span>
           </p>
+          <div className="flex items-center justify-between border-t border-border/60 pt-1.5">
+            <span className="text-muted-foreground">Acompte à régler (50 %)</span>
+            <span className="font-semibold">{formatPrice(estimate.deposit)}</span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-muted-foreground">Solde à régler sur place</span>
+            <span>{formatPrice(estimate.remaining)}</span>
+          </div>
           <p className="mt-1 text-xs text-muted-foreground">
-            Montant définitif vérifié et confirmé à l&apos;étape suivante.
+            Montant définitif vérifié et confirmé à l&apos;étape suivante. En cas
+            d&apos;annulation, l&apos;acompte est remboursé sous 24h.
           </p>
         </div>
       )}

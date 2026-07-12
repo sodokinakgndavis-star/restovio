@@ -15,9 +15,17 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import type { BookingStatus } from "@prisma/client";
+import type { BookingStatus, RefundStatus } from "@prisma/client";
 
-export function BookingActions({ bookingId, status }: { bookingId: string; status: BookingStatus }) {
+export function BookingActions({
+  bookingId,
+  status,
+  refundStatus,
+}: {
+  bookingId: string;
+  status: BookingStatus;
+  refundStatus?: RefundStatus;
+}) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -36,6 +44,25 @@ export function BookingActions({ bookingId, status }: { bookingId: string; statu
       }
 
       toast.success(newStatus === "CONFIRMED" ? "Réservation confirmée." : "Réservation annulée.");
+      router.refresh();
+    });
+  }
+
+  function markRefunded() {
+    startTransition(async () => {
+      const res = await fetch(`/api/bookings/${bookingId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ refundStatus: "REFUNDED" }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        toast.error(data.error ?? "Action impossible.");
+        return;
+      }
+
+      toast.success("Acompte marqué comme remboursé.");
       router.refresh();
     });
   }
@@ -65,6 +92,11 @@ export function BookingActions({ bookingId, status }: { bookingId: string; statu
       {status !== "CANCELLED" && (
         <Button variant="outline" size="sm" disabled={isPending} onClick={() => updateStatus("CANCELLED")}>
           Annuler
+        </Button>
+      )}
+      {refundStatus === "PENDING" && (
+        <Button variant="outline" size="sm" disabled={isPending} onClick={markRefunded}>
+          Marquer remboursé
         </Button>
       )}
 

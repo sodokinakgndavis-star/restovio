@@ -137,6 +137,7 @@ async function main() {
   });
 
   if (!existingBooking) {
+    const totalPrice = rooms[0].price * 3;
     await prisma.booking.create({
       data: {
         userId: client.id,
@@ -145,7 +146,8 @@ async function main() {
         checkOut: inEightDays,
         guests: 2,
         status: BookingStatus.CONFIRMED,
-        totalPrice: rooms[0].price * 3,
+        totalPrice,
+        depositAmount: Math.round(totalPrice * 0.5),
       },
     });
   }

@@ -7,11 +7,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
 import { BookingStatusBadge } from "@/components/features/bookings/booking-status-badge";
 import { BookingActions } from "@/components/features/admin/booking-actions";
 import { BookingFilters } from "@/components/features/admin/booking-filters";
 import { getBookingsForAdmin } from "@/lib/data/bookings";
-import { formatPrice } from "@/lib/format";
+import { formatPrice, refundStatusLabels } from "@/lib/format";
 import type { BookingStatus } from "@prisma/client";
 
 export const metadata = { title: "Gestion des réservations" };
@@ -58,6 +59,7 @@ export default async function AdminBookingsPage({
                 <TableHead>Dates</TableHead>
                 <TableHead>Prix</TableHead>
                 <TableHead>Statut</TableHead>
+                <TableHead>Remboursement</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -78,6 +80,13 @@ export default async function AdminBookingsPage({
                     <BookingStatusBadge status={booking.status} />
                   </TableCell>
                   <TableCell>
+                    {booking.refundStatus !== "NOT_APPLICABLE" && (
+                      <Badge variant={booking.refundStatus === "PENDING" ? "secondary" : "default"}>
+                        {refundStatusLabels[booking.refundStatus]}
+                      </Badge>
+                    )}
+                  </TableCell>
+                  <TableCell>
                     <div className="flex items-center justify-end gap-1">
                       <Link
                         href={`/admin/reservations/${booking.id}`}
@@ -85,7 +94,11 @@ export default async function AdminBookingsPage({
                       >
                         Détail
                       </Link>
-                      <BookingActions bookingId={booking.id} status={booking.status} />
+                      <BookingActions
+                        bookingId={booking.id}
+                        status={booking.status}
+                        refundStatus={booking.refundStatus}
+                      />
                     </div>
                   </TableCell>
                 </TableRow>

@@ -5,7 +5,7 @@ import { ArrowLeft } from "lucide-react";
 import { BookingStatusBadge } from "@/components/features/bookings/booking-status-badge";
 import { BookingActions } from "@/components/features/admin/booking-actions";
 import { getBookingById } from "@/lib/data/bookings";
-import { formatPrice } from "@/lib/format";
+import { formatPrice, refundStatusLabels } from "@/lib/format";
 
 export const metadata = { title: "Détail de la réservation" };
 
@@ -68,9 +68,30 @@ export default async function AdminBookingDetailPage({
               <dd className="font-semibold">{formatPrice(booking.totalPrice)}</dd>
             </div>
             <div>
+              <dt className="text-muted-foreground">Acompte (50 %)</dt>
+              <dd>{formatPrice(booking.depositAmount)}</dd>
+            </div>
+            <div>
+              <dt className="text-muted-foreground">Solde sur place</dt>
+              <dd>{formatPrice(booking.totalPrice - booking.depositAmount)}</dd>
+            </div>
+            <div>
               <dt className="text-muted-foreground">Créée le</dt>
               <dd>{new Date(booking.createdAt).toLocaleString("fr-FR")}</dd>
             </div>
+            {booking.refundStatus !== "NOT_APPLICABLE" && (
+              <div>
+                <dt className="text-muted-foreground">Remboursement</dt>
+                <dd>
+                  {refundStatusLabels[booking.refundStatus]}
+                  {booking.refundStatus === "PENDING" && booking.refundDueAt && (
+                    <span className="block text-xs text-muted-foreground">
+                      Avant le {new Date(booking.refundDueAt).toLocaleString("fr-FR")}
+                    </span>
+                  )}
+                </dd>
+              </div>
+            )}
           </dl>
 
           {booking.comment && (
@@ -81,7 +102,11 @@ export default async function AdminBookingDetailPage({
           )}
 
           <div className="pt-2">
-            <BookingActions bookingId={booking.id} status={booking.status} />
+            <BookingActions
+              bookingId={booking.id}
+              status={booking.status}
+              refundStatus={booking.refundStatus}
+            />
           </div>
         </div>
       </div>

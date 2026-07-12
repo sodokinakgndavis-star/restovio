@@ -56,6 +56,19 @@ export default async function MesReservationsPage() {
               {new Date(booking.checkOut).toLocaleDateString("fr-FR")} — {booking.guests} pers.
             </p>
             <p className="mt-1 text-sm font-medium">{formatPrice(booking.totalPrice)}</p>
+            <p className="text-xs text-muted-foreground">
+              Acompte {formatPrice(booking.depositAmount)} · Solde sur place{" "}
+              {formatPrice(booking.totalPrice - booking.depositAmount)}
+            </p>
+            {booking.status === "CANCELLED" && booking.refundStatus === "PENDING" && (
+              <p className="mt-1 text-xs text-amber-600 dark:text-amber-400">
+                Remboursement de l&apos;acompte prévu avant le{" "}
+                {booking.refundDueAt && new Date(booking.refundDueAt).toLocaleString("fr-FR")}
+              </p>
+            )}
+            {booking.status === "CANCELLED" && booking.refundStatus === "REFUNDED" && (
+              <p className="mt-1 text-xs text-green-600 dark:text-green-400">Acompte remboursé</p>
+            )}
           </div>
 
           <div className="flex gap-2">

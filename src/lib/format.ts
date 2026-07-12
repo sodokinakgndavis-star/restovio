@@ -19,3 +19,9 @@ export const bookingStatusLabels: Record<string, string> = {
   CONFIRMED: "Confirmée",
   CANCELLED: "Annulée",
 };
+
+export const refundStatusLabels: Record<string, string> = {
+  NOT_APPLICABLE: "Sans objet",
+  PENDING: "Remboursement en attente",
+  REFUNDED: "Remboursé",
+};

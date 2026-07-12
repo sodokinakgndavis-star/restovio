@@ -63,12 +63,40 @@ export default async function BookingDetailPage({ params }: { params: Promise<{ 
               <dt className="text-muted-foreground">Prix total</dt>
               <dd className="font-semibold">{formatPrice(booking.totalPrice)}</dd>
             </div>
+            <div>
+              <dt className="text-muted-foreground">Acompte (50 %)</dt>
+              <dd>{formatPrice(booking.depositAmount)}</dd>
+            </div>
+            <div>
+              <dt className="text-muted-foreground">Solde à régler sur place</dt>
+              <dd>{formatPrice(booking.totalPrice - booking.depositAmount)}</dd>
+            </div>
           </dl>
 
           {booking.comment && (
             <div>
               <p className="text-sm text-muted-foreground">Commentaire</p>
               <p className="text-sm">{booking.comment}</p>
+            </div>
+          )}
+
+          {booking.status === "CANCELLED" && booking.refundStatus !== "NOT_APPLICABLE" && (
+            <div
+              className={`rounded-md p-3 text-sm ${
+                booking.refundStatus === "PENDING"
+                  ? "bg-amber-50 text-amber-700 dark:bg-amber-950 dark:text-amber-400"
+                  : "bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-400"
+              }`}
+            >
+              {booking.refundStatus === "PENDING" ? (
+                <>
+                  Remboursement de l&apos;acompte ({formatPrice(booking.depositAmount)}) prévu
+                  avant le{" "}
+                  {booking.refundDueAt && new Date(booking.refundDueAt).toLocaleString("fr-FR")}.
+                </>
+              ) : (
+                <>Acompte de {formatPrice(booking.depositAmount)} remboursé.</>
+              )}
             </div>
           )}
 
