@@ -39,6 +39,10 @@ depuis un tableau de bord dédié.
 - Graphique Recharts (réservations / revenus sur 30 jours) sur le tableau
   de bord.
 - Micro-animations Framer Motion (section héro), transitions shadcn/ui.
+- Vérification de disponibilité en direct sur la fiche chambre, filtre par
+  date des réservations côté admin, page de détail de réservation admin.
+- Acompte de 50 % à la réservation et suivi de remboursement sous 24h en
+  cas d'annulation (paiement simulé, hors plateforme).
 
 ## Stack technique
 
@@ -161,6 +165,14 @@ du prix).
 - **Aucun paiement réel, aucun e-mail transactionnel réel** : conforme au
   périmètre défini (section 8 du cahier des charges). Le chiffre d'affaires
   du tableau de bord est simulé à partir des réservations confirmées.
+- **Acompte de 50 % et remboursement sous 24h (simulés)** : chaque réservation
+  calcule et stocke un acompte de 50 % du prix total (`depositAmount`), le
+  solde étant réglé sur place. En cas d'annulation, un statut de
+  remboursement (`refundStatus`) et une échéance à 24h (`refundDueAt`) sont
+  enregistrés ; l'administrateur peut marquer le remboursement comme
+  effectué une fois le virement réalisé hors plateforme. Aucun mouvement
+  d'argent réel n'a lieu sur le site (pas de Stripe ni d'autre PSP), en
+  cohérence avec le hors-périmètre paiement du cahier des charges.
 - **Désactivation/suppression de compte** (Could Have) non implémentée,
   conformément à la stratégie de repli du cahier des charges en cas de
   contrainte de temps.
