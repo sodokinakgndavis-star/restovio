@@ -43,6 +43,14 @@ depuis un tableau de bord dédié.
   date des réservations côté admin, page de détail de réservation admin.
 - Acompte de 50 % à la réservation et suivi de remboursement sous 24h en
   cas d'annulation (paiement simulé, hors plateforme).
+- Remise automatique de -30 % sur les séjours de 30 nuits ou plus.
+- Nouveaux services mis en avant : petit-déjeuner gratuit, véhicule/chauffeur
+  pour les sorties (tarif négocié directement, hors plateforme), salle de
+  cinéma (séance chaque vendredi soir), piscines adultes et enfants.
+- Page `/restaurant` : menu de l'hôtel (entrées, plats, desserts, boissons)
+  géré depuis l'admin, et réservation de table pour un dîner en famille
+  vue piscine (créneaux 19h–22h), avec suivi côté client (`/mon-compte/tables`)
+  et gestion côté admin (`/admin/tables`).
 
 ## Stack technique
 
