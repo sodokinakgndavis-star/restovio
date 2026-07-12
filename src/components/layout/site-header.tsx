@@ -37,11 +37,18 @@ export function SiteHeader() {
   }
 
   return (
-    <header className="sticky top-0 z-40 border-b border-[#a9843f]/40 bg-[#c9a84c] backdrop-blur supports-[backdrop-filter]:bg-[#c9a84c]/95">
+    <header className="sticky top-0 z-40 border-b border-[#4a3b1a]/50 bg-gradient-to-b from-[#8f7440] via-[#7a6234] to-[#5c4a22] backdrop-blur supports-[backdrop-filter]:bg-[#7a6234]/95">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
         <Link href="/" className="flex items-center gap-2">
-          <Image src="/logo-mark.png" alt="Reservia" width={36} height={36} className="h-9 w-9" priority />
-          <span className="text-xl font-bold tracking-tight text-neutral-900">Reservia</span>
+          <Image
+            src="/logo-mark-light.png"
+            alt="Reservia"
+            width={36}
+            height={36}
+            className="h-9 w-9"
+            priority
+          />
+          <span className="text-xl font-bold tracking-tight text-[#f5ead0]">Reservia</span>
         </Link>
 
         <nav className="hidden items-center gap-6 md:flex">
@@ -49,8 +56,8 @@ export function SiteHeader() {
             <Link
               key={link.href}
               href={link.href}
-              className={`text-sm font-medium transition-colors hover:text-neutral-900 ${
-                pathname === link.href ? "text-neutral-900" : "text-neutral-900/70"
+              className={`text-sm font-medium transition-colors hover:text-[#f5ead0] ${
+                pathname === link.href ? "text-[#f5ead0]" : "text-[#f5ead0]/70"
               }`}
             >
               {link.label}
@@ -65,7 +72,7 @@ export function SiteHeader() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-neutral-900 hover:bg-black/10 hover:text-neutral-900"
+                  className="text-[#f5ead0] hover:bg-white/10 hover:text-[#f5ead0]"
                   render={<Link href="/admin" />}
                 >
                   Administration
@@ -74,7 +81,7 @@ export function SiteHeader() {
               <Button
                 variant="ghost"
                 size="sm"
-                className="text-neutral-900 hover:bg-black/10 hover:text-neutral-900"
+                className="text-[#f5ead0] hover:bg-white/10 hover:text-[#f5ead0]"
                 render={<Link href="/mon-compte" />}
               >
                 Mon compte
@@ -88,7 +95,7 @@ export function SiteHeader() {
               <Button
                 variant="ghost"
                 size="sm"
-                className="text-neutral-900 hover:bg-black/10 hover:text-neutral-900"
+                className="text-[#f5ead0] hover:bg-white/10 hover:text-[#f5ead0]"
                 render={<Link href="/connexion" />}
               >
                 Connexion
@@ -106,7 +113,7 @@ export function SiteHeader() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="text-neutral-900 hover:bg-black/10 hover:text-neutral-900 md:hidden"
+                className="text-[#f5ead0] hover:bg-white/10 hover:text-[#f5ead0] md:hidden"
               >
                 <Menu className="h-5 w-5" />
               </Button>
