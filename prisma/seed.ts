@@ -29,6 +29,46 @@ async function main() {
     },
   });
 
+  const standardImages = [
+    "photo-1618773928121-c32242e63f39",
+    "photo-1629140727571-9b5c6f6267b4",
+    "photo-1631049307264-da0ec9d70304",
+    "photo-1566665797739-1674de7a421a",
+    "photo-1711059985570-4c32ed12a12c",
+    "photo-1568495248636-6432b97bd949",
+    "photo-1631049552057-403cdb8f0658",
+  ].map((id) => `https://images.unsplash.com/${id}?w=1200`);
+
+  const superieureImages = [
+    "photo-1719266084633-24981ecdc417",
+    "photo-1496945589647-8784b8d04934",
+    "photo-1645587593689-e7cde7c5d9db",
+    "photo-1585311746214-764246524f52",
+    "photo-1702830499141-a0634d87d6af",
+    "photo-1696854649609-1fd6e5abf87f",
+    "photo-1558553066-933ef54720a9",
+  ].map((id) => `https://images.unsplash.com/${id}?w=1200`);
+
+  const suiteImages = [
+    "photo-1731336478850-6bce7235e320",
+    "photo-1685592437742-3b56edb46b15",
+    "photo-1777169794972-12095816073b",
+    "photo-1777180249046-abf7d640e0d9",
+    "photo-1776763018821-8feeaeeee0a5",
+    "photo-1776763018970-9fdf66bd4666",
+    "photo-1775866914882-9f0d58aa3372",
+  ].map((id) => `https://images.unsplash.com/${id}?w=1200`);
+
+  const familialeImages = [
+    "photo-1721222203415-69033eaf3bd1",
+    "photo-1721989516956-a9b06801038f",
+    "photo-1721989522157-0e73fa635637",
+    "photo-1654243397456-73da481a623e",
+    "photo-1662841540530-2f04bb3291e8",
+    "photo-1741506131058-533fcf894483",
+    "photo-1662990782404-a5d704ea323a",
+  ].map((id) => `https://images.unsplash.com/${id}?w=1200`);
+
   const roomsData = [
     {
       name: "Chambre Standard Vue Jardin",
@@ -39,9 +79,7 @@ async function main() {
       capacity: 2,
       category: RoomCategory.STANDARD,
       amenities: ["Wi-Fi gratuit", "Climatisation", "TV écran plat", "Salle de bain privée"],
-      images: [
-        "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=1200",
-      ],
+      images: standardImages,
     },
     {
       name: "Chambre Supérieure Balcon",
@@ -52,9 +90,7 @@ async function main() {
       capacity: 3,
       category: RoomCategory.SUPERIEURE,
       amenities: ["Wi-Fi gratuit", "Climatisation", "Balcon privé", "Minibar", "Coffre-fort"],
-      images: [
-        "https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=1200",
-      ],
+      images: superieureImages,
     },
     {
       name: "Suite Prestige",
@@ -65,9 +101,7 @@ async function main() {
       capacity: 2,
       category: RoomCategory.SUITE,
       amenities: ["Wi-Fi gratuit", "Salon séparé", "Baignoire", "Service en chambre", "Vue panoramique"],
-      images: [
-        "https://images.unsplash.com/photo-1591088398332-8a7791972843?w=1200",
-      ],
+      images: suiteImages,
     },
     {
       name: "Chambre Familiale",
@@ -78,9 +112,7 @@ async function main() {
       capacity: 5,
       category: RoomCategory.FAMILIALE,
       amenities: ["Wi-Fi gratuit", "Lits superposés", "Climatisation", "TV écran plat", "Kitchenette"],
-      images: [
-        "https://images.unsplash.com/photo-1595576508898-0ad5c879a061?w=1200",
-      ],
+      images: familialeImages,
     },
   ];
 
@@ -88,7 +120,7 @@ async function main() {
   for (const data of roomsData) {
     const room = await prisma.room.upsert({
       where: { slug: data.slug },
-      update: {},
+      update: data,
       create: data,
     });
     rooms.push(room);
