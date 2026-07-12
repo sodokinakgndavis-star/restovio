@@ -101,6 +101,17 @@ export async function getRoomById(id: string) {
   return prisma.room.findUnique({ where: { id } });
 }
 
+export async function getAllRoomsForAdmin() {
+  return prisma.room.findMany({
+    orderBy: { createdAt: "desc" },
+    include: {
+      _count: {
+        select: { bookings: { where: { status: { in: ["PENDING", "CONFIRMED"] } } } },
+      },
+    },
+  });
+}
+
 export async function isRoomAvailable(
   roomId: string,
   checkIn: Date,

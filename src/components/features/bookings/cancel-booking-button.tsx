@@ -1,0 +1,62 @@
+"use client";
+
+import { useTransition } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+
+export function CancelBookingButton({ bookingId }: { bookingId: string }) {
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+
+  function handleCancel() {
+    startTransition(async () => {
+      const res = await fetch(`/api/bookings/${bookingId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "CANCELLED" }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        toast.error(data.error ?? "Impossible d'annuler cette réservation.");
+        return;
+      }
+
+      toast.success("Réservation annulée.");
+      router.refresh();
+    });
+  }
+
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger render={<Button variant="outline" size="sm">Annuler</Button>} />
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Annuler cette réservation ?</AlertDialogTitle>
+          <AlertDialogDescription>
+            Cette action est irréversible. Vous pourrez toujours réserver à nouveau si la
+            chambre est disponible.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Retour</AlertDialogCancel>
+          <AlertDialogAction onClick={handleCancel} disabled={isPending}>
+            {isPending ? "Annulation…" : "Confirmer l'annulation"}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}
