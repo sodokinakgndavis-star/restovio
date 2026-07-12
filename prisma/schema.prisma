@@ -1,0 +1,108 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  CLIENT
+  ADMIN
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+}
+
+enum RoomCategory {
+  STANDARD
+  SUPERIEURE
+  SUITE
+  FAMILIALE
+}
+
+enum ContactStatus {
+  NEW
+  READ
+  ARCHIVED
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role     @default(CLIENT)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  bookings     Booking[]
+  testimonials Testimonial[]
+}
+
+model Room {
+  id          String       @id @default(cuid())
+  name        String
+  slug        String?      @unique
+  description String
+  price       Int
+  capacity    Int
+  category    RoomCategory
+  amenities   String[]     @default([])
+  images      String[]     @default([])
+  available   Boolean      @default(true)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  bookings Booking[]
+
+  @@index([category])
+  @@index([price])
+}
+
+model Booking {
+  id         String        @id @default(cuid())
+  userId     String
+  roomId     String
+  checkIn    DateTime
+  checkOut   DateTime
+  guests     Int
+  status     BookingStatus @default(PENDING)
+  comment    String?
+  totalPrice Int
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Restrict)
+  room Room @relation(fields: [roomId], references: [id], onDelete: Restrict)
+
+  @@index([userId])
+  @@index([roomId])
+  @@index([status])
+  @@index([roomId, checkIn, checkOut])
+}
+
+model Testimonial {
+  id         String   @id @default(cuid())
+  userId     String?
+  authorName String
+  content    String
+  rating     Int
+  createdAt  DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+}
+
+model ContactMessage {
+  id        String        @id @default(cuid())
+  name      String
+  email     String
+  subject   String?
+  message   String
+  status    ContactStatus @default(NEW)
+  createdAt DateTime      @default(now())
+}
