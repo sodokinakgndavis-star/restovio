@@ -17,6 +17,7 @@ import {
 const navLinks = [
   { href: "/", label: "Accueil" },
   { href: "/chambres", label: "Chambres" },
+  { href: "/restaurant", label: "Restaurant" },
   { href: "/a-propos", label: "À propos" },
   { href: "/contact", label: "Contact" },
 ];

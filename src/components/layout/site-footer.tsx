@@ -20,6 +20,11 @@ export function SiteFooter() {
               </Link>
             </li>
             <li>
+              <Link href="/restaurant" className="hover:text-foreground">
+                Restaurant
+              </Link>
+            </li>
+            <li>
               <Link href="/a-propos" className="hover:text-foreground">
                 À propos
               </Link>

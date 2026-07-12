@@ -3,7 +3,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { bookingSchema } from "@/lib/validators/booking";
 import { isRoomAvailable } from "@/lib/data/rooms";
-import { computeNights, computeDeposit } from "@/lib/data/bookings";
+import { computeNights, computeDeposit, computeTotalPrice } from "@/lib/data/bookings";
 
 export async function POST(request: Request) {
   // RG-05 : une réservation ne peut être créée que par un utilisateur authentifié.
@@ -56,9 +56,10 @@ export async function POST(request: Request) {
     );
   }
 
-  // RG-07 : le prix total est calculé et vérifié côté serveur.
+  // RG-07 : le prix total est calculé et vérifié côté serveur, y compris la remise
+  // longue durée (-30 % à partir de 30 nuits).
   const nights = computeNights(checkIn, checkOut);
-  const totalPrice = room.price * nights;
+  const { total: totalPrice } = computeTotalPrice(room.price, nights);
   // Acompte de 50 % dû à la réservation (paiement simulé, hors plateforme) ; le solde
   // est réglé sur place à l'arrivée.
   const depositAmount = computeDeposit(totalPrice);

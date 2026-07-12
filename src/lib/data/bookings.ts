@@ -1,25 +1,17 @@
 import { prisma } from "@/lib/prisma";
 import type { Prisma, BookingStatus } from "@prisma/client";
 
-// Politique de paiement simulée (aucune intégration de paiement réel, section 8 du
-// cahier des charges) : un acompte de 50 % est dû à la réservation, le solde sur place.
-export const DEPOSIT_RATIO = 0.5;
-// Délai de remboursement annoncé en cas d'annulation.
-export const REFUND_WINDOW_HOURS = 24;
-
-export function computeNights(checkIn: Date, checkOut: Date) {
-  const msPerNight = 1000 * 60 * 60 * 24;
-  const nights = Math.round((checkOut.getTime() - checkIn.getTime()) / msPerNight);
-  return Math.max(1, nights);
-}
-
-export function computeDeposit(totalPrice: number) {
-  return Math.round(totalPrice * DEPOSIT_RATIO);
-}
-
-export function computeRefundDueDate(from: Date = new Date()) {
-  return new Date(from.getTime() + REFUND_WINDOW_HOURS * 60 * 60 * 1000);
-}
+export {
+  DEPOSIT_RATIO,
+  REFUND_WINDOW_HOURS,
+  LONG_STAY_MIN_NIGHTS,
+  LONG_STAY_DISCOUNT_RATIO,
+  computeNights,
+  isLongStay,
+  computeTotalPrice,
+  computeDeposit,
+  computeRefundDueDate,
+} from "@/lib/pricing";
 
 export async function getBookingsByUser(userId: string) {
   return prisma.booking.findMany({

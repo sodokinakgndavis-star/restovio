@@ -25,3 +25,10 @@ export const refundStatusLabels: Record<string, string> = {
   PENDING: "Remboursement en attente",
   REFUNDED: "Remboursé",
 };
+
+export const menuCategoryLabels: Record<string, string> = {
+  ENTREE: "Entrées",
+  PLAT: "Plats",
+  DESSERT: "Desserts",
+  BOISSON: "Boissons",
+};

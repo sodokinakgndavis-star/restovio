@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { bookingSchema, type BookingInput } from "@/lib/validators/booking";
 import { formatPrice } from "@/lib/format";
+import { computeTotalPrice, computeDeposit, LONG_STAY_MIN_NIGHTS } from "@/lib/pricing";
 
 type BookingFormProps = {
   room: { id: string; price: number; capacity: number };
@@ -46,9 +47,9 @@ export function BookingForm({ room }: BookingFormProps) {
     const outDate = new Date(checkOut);
     const nights = Math.round((outDate.getTime() - inDate.getTime()) / (1000 * 60 * 60 * 24));
     if (nights <= 0) return null;
-    const total = nights * room.price;
-    const deposit = Math.round(total * 0.5);
-    return { nights, total, deposit, remaining: total - deposit };
+    const { subtotal, total, discounted } = computeTotalPrice(room.price, nights);
+    const deposit = computeDeposit(total);
+    return { nights, subtotal, total, discounted, deposit, remaining: total - deposit };
   }, [checkIn, checkOut, room.price]);
 
   // Vérification de la disponibilité réelle de la chambre sur la période choisie
@@ -180,6 +181,23 @@ export function BookingForm({ room }: BookingFormProps) {
 
       {estimate && (
         <div className="space-y-1.5 rounded-md bg-muted p-3 text-sm">
+          {estimate.discounted ? (
+            <div className="flex items-center justify-between">
+              <span className="text-muted-foreground line-through">
+                {formatPrice(estimate.subtotal)}
+              </span>
+              <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+                Remise longue durée -30 %
+              </span>
+            </div>
+          ) : (
+            checkIn &&
+            checkOut && (
+              <p className="text-xs text-muted-foreground">
+                Séjour de {LONG_STAY_MIN_NIGHTS} nuits ou plus : -30 % automatique.
+              </p>
+            )
+          )}
           <p>
             {estimate.nights} nuit(s) — estimation :{" "}
             <span className="font-semibold">{formatPrice(estimate.total)}</span>

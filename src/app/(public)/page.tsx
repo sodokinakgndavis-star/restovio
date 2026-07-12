@@ -1,6 +1,16 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Star } from "lucide-react";
+import {
+  Star,
+  Coffee,
+  Wifi,
+  Clock,
+  CircleParking,
+  Car,
+  Clapperboard,
+  Waves,
+  UtensilsCrossed,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { RoomCard } from "@/components/features/rooms/room-card";
@@ -14,10 +24,48 @@ import { getTestimonials } from "@/lib/data/testimonials";
 export const revalidate = 60;
 
 const services = [
-  { title: "Petit-déjeuner inclus", description: "Buffet frais servi chaque matin de 7h à 11h." },
-  { title: "Wi-Fi haut débit", description: "Connexion gratuite et illimitée dans tout l'établissement." },
-  { title: "Réception 24h/24", description: "Une équipe disponible à toute heure pour vous accueillir." },
-  { title: "Parking sécurisé", description: "Stationnement privé et surveillé sur place." },
+  {
+    icon: Coffee,
+    title: "Petit-déjeuner gratuit",
+    description: "Buffet frais offert à tous les clients, servi chaque matin de 7h à 11h.",
+  },
+  {
+    icon: Wifi,
+    title: "Wi-Fi haut débit",
+    description: "Connexion gratuite et illimitée dans tout l'établissement.",
+  },
+  {
+    icon: Clock,
+    title: "Réception 24h/24",
+    description: "Une équipe disponible à toute heure pour vous accueillir.",
+  },
+  {
+    icon: CircleParking,
+    title: "Parking sécurisé",
+    description: "Stationnement privé et surveillé sur place.",
+  },
+  {
+    icon: Car,
+    title: "Véhicules pour vos sorties",
+    description:
+      "Un chauffeur disponible pour vos excursions. Sans véhicule personnel, le tarif se négocie directement avec le chauffeur.",
+  },
+  {
+    icon: Clapperboard,
+    title: "Salle de cinéma",
+    description:
+      "Séance ouverte à tous les clients chaque vendredi soir dans notre salle de projection.",
+  },
+  {
+    icon: Waves,
+    title: "Piscines adultes & enfants",
+    description: "Un bassin adultes et un bassin dédié aux enfants, en accès libre.",
+  },
+  {
+    icon: UtensilsCrossed,
+    title: "Restaurant & table vue piscine",
+    description: "Un menu varié et une table réservable pour vos dîners en famille face à la piscine.",
+  },
 ];
 
 const galleryImages = [
@@ -96,7 +144,8 @@ export default async function HomePage() {
             {services.map((service) => (
               <Card key={service.title}>
                 <CardContent className="pt-6">
-                  <h3 className="font-semibold">{service.title}</h3>
+                  <service.icon className="h-6 w-6 text-primary" />
+                  <h3 className="mt-3 font-semibold">{service.title}</h3>
                   <p className="mt-2 text-sm text-muted-foreground">{service.description}</p>
                 </CardContent>
               </Card>

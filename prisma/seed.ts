@@ -1,4 +1,4 @@
-import { PrismaClient, RoomCategory, BookingStatus } from "@prisma/client";
+import { PrismaClient, RoomCategory, BookingStatus, MenuCategory } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
@@ -174,6 +174,128 @@ async function main() {
         },
       ],
     });
+  }
+
+  const menuItemsData = [
+    {
+      name: "Salade César",
+      description: "Romaine, poulet grillé, copeaux de parmesan, croûtons, sauce César maison.",
+      price: 1200,
+      category: MenuCategory.ENTREE,
+    },
+    {
+      name: "Velouté de légumes de saison",
+      description: "Préparé chaque jour à partir de légumes frais du marché.",
+      price: 900,
+      category: MenuCategory.ENTREE,
+    },
+    {
+      name: "Carpaccio de bœuf",
+      description: "Fines tranches de bœuf, huile d'olive, copeaux de parmesan, roquette.",
+      price: 1400,
+      category: MenuCategory.ENTREE,
+    },
+    {
+      name: "Assiette de charcuterie et fromages",
+      description: "Sélection de charcuteries fines et fromages affinés, pain grillé.",
+      price: 1600,
+      category: MenuCategory.ENTREE,
+    },
+    {
+      name: "Filet de dorade grillée",
+      description: "Servi avec légumes de saison et sauce citronnée.",
+      price: 2200,
+      category: MenuCategory.PLAT,
+    },
+    {
+      name: "Risotto aux champignons",
+      description: "Riz arborio crémeux, champignons de saison, parmesan.",
+      price: 1900,
+      category: MenuCategory.PLAT,
+    },
+    {
+      name: "Entrecôte grillée sauce poivre",
+      description: "Bœuf grillé à la demande, frites maison, sauce au poivre.",
+      price: 2600,
+      category: MenuCategory.PLAT,
+    },
+    {
+      name: "Poulet rôti aux herbes",
+      description: "Poulet fermier rôti, pommes de terre rissolées, jus corsé.",
+      price: 2100,
+      category: MenuCategory.PLAT,
+    },
+    {
+      name: "Pâtes aux fruits de mer",
+      description: "Linguine, fruits de mer frais, sauce tomate légèrement relevée.",
+      price: 2300,
+      category: MenuCategory.PLAT,
+    },
+    {
+      name: "Burger maison et frites",
+      description: "Bœuf haché, cheddar affiné, oignons confits, frites fraîches.",
+      price: 1800,
+      category: MenuCategory.PLAT,
+    },
+    {
+      name: "Tiramisu",
+      description: "Recette traditionnelle italienne, mascarpone et café.",
+      price: 900,
+      category: MenuCategory.DESSERT,
+    },
+    {
+      name: "Tarte au citron meringuée",
+      description: "Pâte sablée, crème citron, meringue légèrement dorée.",
+      price: 950,
+      category: MenuCategory.DESSERT,
+    },
+    {
+      name: "Fondant au chocolat",
+      description: "Cœur coulant, servi tiède avec une boule de glace vanille.",
+      price: 1000,
+      category: MenuCategory.DESSERT,
+    },
+    {
+      name: "Salade de fruits frais",
+      description: "Fruits de saison coupés minute.",
+      price: 800,
+      category: MenuCategory.DESSERT,
+    },
+    {
+      name: "Eau minérale",
+      description: "Plate ou gazeuse, 50 cl.",
+      price: 400,
+      category: MenuCategory.BOISSON,
+    },
+    {
+      name: "Jus de fruits pressés",
+      description: "Orange, pomme ou ananas, pressé minute.",
+      price: 600,
+      category: MenuCategory.BOISSON,
+    },
+    {
+      name: "Verre de vin (rouge ou blanc)",
+      description: "Sélection de vins locaux, servi au verre.",
+      price: 700,
+      category: MenuCategory.BOISSON,
+    },
+    {
+      name: "Café ou thé",
+      description: "Café expresso ou thé infusé à la demande.",
+      price: 350,
+      category: MenuCategory.BOISSON,
+    },
+    {
+      name: "Cocktail sans alcool",
+      description: "Mocktail fruité préparé par notre bar.",
+      price: 750,
+      category: MenuCategory.BOISSON,
+    },
+  ];
+
+  const menuItemCount = await prisma.menuItem.count();
+  if (menuItemCount === 0) {
+    await prisma.menuItem.createMany({ data: menuItemsData });
   }
 
   console.log("Seed terminé :", { admin: admin.email, client: client.email, rooms: rooms.length });

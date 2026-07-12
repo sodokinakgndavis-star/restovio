@@ -2,13 +2,23 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, BedDouble, CalendarCheck, Users, Home } from "lucide-react";
+import {
+  LayoutDashboard,
+  BedDouble,
+  CalendarCheck,
+  Users,
+  Home,
+  UtensilsCrossed,
+  Martini,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const links = [
   { href: "/admin", label: "Tableau de bord", icon: LayoutDashboard },
   { href: "/admin/chambres", label: "Chambres", icon: BedDouble },
   { href: "/admin/reservations", label: "Réservations", icon: CalendarCheck },
+  { href: "/admin/tables", label: "Tables restaurant", icon: Martini },
+  { href: "/admin/menu", label: "Menu", icon: UtensilsCrossed },
   { href: "/admin/utilisateurs", label: "Utilisateurs", icon: Users },
 ];
 

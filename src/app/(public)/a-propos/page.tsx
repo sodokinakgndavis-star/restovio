@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export const metadata = { title: "À propos" };
 
@@ -55,6 +56,38 @@ export default function AProposPage() {
             ))}
           </div>
         </div>
+      </section>
+
+      <section className="mx-auto max-w-3xl px-4 py-16">
+        <h2 className="text-center text-2xl font-bold">Loisirs et avantages</h2>
+        <ul className="mt-8 space-y-4 text-muted-foreground">
+          <li>
+            <span className="font-medium text-foreground">Remise longue durée : </span>
+            -30 % automatique sur tout séjour de 30 nuits ou plus.
+          </li>
+          <li>
+            <span className="font-medium text-foreground">Salle de cinéma : </span>
+            séance ouverte à tous les clients chaque vendredi soir.
+          </li>
+          <li>
+            <span className="font-medium text-foreground">Piscines : </span>
+            un bassin adultes et un bassin enfants, en accès libre pour tous les résidents.
+          </li>
+          <li>
+            <span className="font-medium text-foreground">Sorties : </span>
+            un chauffeur est disponible pour vos excursions ; sans véhicule personnel, le
+            tarif se négocie directement avec lui.
+          </li>
+          <li>
+            <span className="font-medium text-foreground">Restaurant : </span>
+            découvrez notre menu et réservez une table en famille avec vue sur la piscine
+            depuis la page{" "}
+            <Link href="/restaurant" className="underline underline-offset-4 hover:text-foreground">
+              Restaurant
+            </Link>
+            .
+          </li>
+        </ul>
       </section>
     </div>
   );

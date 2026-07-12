@@ -37,6 +37,13 @@ enum RefundStatus {
   REFUNDED
 }
 
+enum MenuCategory {
+  ENTREE
+  PLAT
+  DESSERT
+  BOISSON
+}
+
 model User {
   id        String   @id @default(cuid())
   name      String
@@ -46,8 +53,9 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  bookings     Booking[]
-  testimonials Testimonial[]
+  bookings          Booking[]
+  testimonials      Testimonial[]
+  tableReservations TableReservation[]
 }
 
 model Room {
@@ -114,4 +122,36 @@ model ContactMessage {
   message   String
   status    ContactStatus @default(NEW)
   createdAt DateTime      @default(now())
+}
+
+model MenuItem {
+  id          String       @id @default(cuid())
+  name        String
+  description String
+  price       Int
+  category    MenuCategory
+  available   Boolean      @default(true)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@index([category])
+}
+
+// Réservation de table pour les dîners en famille (vue piscine), distincte des
+// réservations de chambre : pas de prix ni d'acompte, simple créneau à confirmer.
+model TableReservation {
+  id        String        @id @default(cuid())
+  userId    String
+  date      DateTime
+  time      String
+  guests    Int
+  comment   String?
+  status    BookingStatus @default(PENDING)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  @@index([userId])
+  @@index([date])
 }
