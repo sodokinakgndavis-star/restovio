@@ -5,8 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { RoomCard } from "@/components/features/rooms/room-card";
 import { ContactForm } from "@/components/features/home/contact-form";
+import { FadeIn } from "@/components/features/home/fade-in";
 import { getFeaturedRooms } from "@/lib/data/rooms";
 import { getTestimonials } from "@/lib/data/testimonials";
+
+// Contenu peu volatile (chambres en vedette, témoignages) : revalidation périodique
+// plutôt que du contenu statique figé au build, pour éviter les données obsolètes.
+export const revalidate = 60;
 
 const services = [
   { title: "Petit-déjeuner inclus", description: "Buffet frais servi chaque matin de 7h à 11h." },
@@ -39,26 +44,28 @@ export default async function HomePage() {
           className="object-cover opacity-40"
         />
         <div className="relative z-10 mx-auto max-w-3xl px-4 text-center">
-          <h1 className="text-4xl font-bold tracking-tight sm:text-6xl">
-            Votre séjour commence ici
-          </h1>
-          <p className="mt-4 text-lg text-white/90">
-            Découvrez nos chambres et suites, réservez en quelques clics et vivez une
-            expérience hôtelière sur mesure.
-          </p>
-          <div className="mt-8 flex justify-center gap-4">
-            <Button size="lg" render={<Link href="/chambres" />}>
-              Voir les chambres
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="bg-white/10 text-white hover:bg-white/20"
-              render={<Link href="/contact" />}
-            >
-              Nous contacter
-            </Button>
-          </div>
+          <FadeIn>
+            <h1 className="text-4xl font-bold tracking-tight sm:text-6xl">
+              Votre séjour commence ici
+            </h1>
+            <p className="mt-4 text-lg text-white/90">
+              Découvrez nos chambres et suites, réservez en quelques clics et vivez une
+              expérience hôtelière sur mesure.
+            </p>
+            <div className="mt-8 flex justify-center gap-4">
+              <Button size="lg" render={<Link href="/chambres" />}>
+                Voir les chambres
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                className="bg-white/10 text-white hover:bg-white/20"
+                render={<Link href="/contact" />}
+              >
+                Nous contacter
+              </Button>
+            </div>
+          </FadeIn>
         </div>
       </section>
 

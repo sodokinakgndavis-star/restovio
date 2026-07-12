@@ -16,6 +16,7 @@ import { getAllRoomsForAdmin } from "@/lib/data/rooms";
 import { categoryLabels, formatPrice } from "@/lib/format";
 
 export const metadata = { title: "Gestion des chambres" };
+export const dynamic = "force-dynamic";
 
 export default async function AdminRoomsPage() {
   const rooms = await getAllRoomsForAdmin();

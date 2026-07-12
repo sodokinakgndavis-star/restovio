@@ -24,7 +24,8 @@ export function UserRoleSelect({
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
-  function handleChange(newRole: string) {
+  function handleChange(newRole: string | null) {
+    if (!newRole) return;
     startTransition(async () => {
       const res = await fetch(`/api/users/${userId}`, {
         method: "PATCH",

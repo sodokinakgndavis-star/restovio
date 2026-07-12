@@ -28,7 +28,7 @@ export function BookingForm({ room }: BookingFormProps) {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<BookingInput>({
+  } = useForm({
     resolver: zodResolver(bookingSchema),
     defaultValues: { roomId: room.id, checkIn: "", checkOut: "", guests: 1, comment: "" },
   });

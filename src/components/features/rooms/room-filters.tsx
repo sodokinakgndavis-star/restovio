@@ -91,7 +91,7 @@ export function RoomFilters() {
       </div>
       <div className="space-y-1.5">
         <Label className="text-xs">Catégorie</Label>
-        <Select value={category} onValueChange={setCategory}>
+        <Select value={category} onValueChange={(value) => setCategory(value ?? "all")}>
           <SelectTrigger className="w-full">
             <SelectValue />
           </SelectTrigger>

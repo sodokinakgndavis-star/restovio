@@ -41,8 +41,9 @@ export function BookingFilters() {
       <Select
         value={status}
         onValueChange={(value) => {
-          setStatus(value);
-          applyFilters(search, value);
+          const nextStatus = value ?? "all";
+          setStatus(nextStatus);
+          applyFilters(search, nextStatus);
         }}
       >
         <SelectTrigger className="sm:w-48">

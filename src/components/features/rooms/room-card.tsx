@@ -19,7 +19,7 @@ export function RoomCard({ room }: { room: RoomCardData }) {
   const image = room.images[0];
 
   return (
-    <Card className="overflow-hidden py-0 gap-0">
+    <Card className="overflow-hidden py-0 gap-0 transition-shadow hover:shadow-md">
       <div className="relative aspect-[4/3] w-full bg-muted">
         {image ? (
           <Image

@@ -7,6 +7,7 @@ import { getDashboardStats } from "@/lib/data/dashboard";
 import { formatPrice } from "@/lib/format";
 
 export const metadata = { title: "Tableau de bord" };
+export const dynamic = "force-dynamic";
 
 export default async function AdminDashboardPage() {
   const stats = await getDashboardStats();

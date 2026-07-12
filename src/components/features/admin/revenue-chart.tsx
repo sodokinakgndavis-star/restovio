@@ -20,8 +20,8 @@ export function RevenueChart({ data }: { data: ChartPoint[] }) {
         <XAxis dataKey="date" fontSize={12} tickLine={false} axisLine={false} />
         <YAxis fontSize={12} tickLine={false} axisLine={false} />
         <Tooltip
-          formatter={(value: number, name: string) => [
-            name === "revenue" ? `${value.toFixed(0)} €` : value,
+          formatter={(value, name) => [
+            name === "revenue" ? `${Number(value).toFixed(0)} €` : value,
             name === "revenue" ? "Revenus" : "Réservations",
           ]}
         />

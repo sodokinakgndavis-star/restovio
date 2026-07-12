@@ -37,7 +37,7 @@ export function RoomForm({ roomId, defaultValues }: RoomFormProps) {
     watch,
     setValue,
     formState: { errors },
-  } = useForm<RoomInput>({
+  } = useForm({
     resolver: zodResolver(roomSchema),
     defaultValues: {
       name: "",
@@ -114,7 +114,10 @@ export function RoomForm({ roomId, defaultValues }: RoomFormProps) {
           control={control}
           name="category"
           render={({ field }) => (
-            <Select value={field.value} onValueChange={field.onChange}>
+            <Select
+              value={field.value}
+              onValueChange={(value) => value && field.onChange(value)}
+            >
               <SelectTrigger className="w-full">
                 <SelectValue />
               </SelectTrigger>

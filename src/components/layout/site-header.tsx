@@ -1,9 +1,18 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
+import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 const navLinks = [
   { href: "/", label: "Accueil" },
@@ -16,8 +25,10 @@ export function SiteHeader() {
   const { data: session, status } = useSession();
   const pathname = usePathname();
   const router = useRouter();
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   async function handleSignOut() {
+    setMobileOpen(false);
     await signOut({ redirect: false });
     router.push("/");
     router.refresh();
@@ -44,7 +55,7 @@ export function SiteHeader() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-2">
+        <div className="hidden items-center gap-2 md:flex">
           {status === "authenticated" && session.user ? (
             <>
               {session.user.role === "ADMIN" && (
@@ -70,6 +81,66 @@ export function SiteHeader() {
             </>
           )}
         </div>
+
+        <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+          <SheetTrigger
+            render={
+              <Button variant="ghost" size="icon" className="md:hidden">
+                <Menu className="h-5 w-5" />
+              </Button>
+            }
+          />
+          <SheetContent>
+            <SheetHeader>
+              <SheetTitle>Reservia</SheetTitle>
+            </SheetHeader>
+            <nav className="flex flex-col gap-1 px-4">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMobileOpen(false)}
+                  className="rounded-md px-2 py-2.5 text-sm font-medium hover:bg-muted"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
+            <div className="mt-2 flex flex-col gap-2 border-t p-4">
+              {status === "authenticated" && session.user ? (
+                <>
+                  {session.user.role === "ADMIN" && (
+                    <Button
+                      variant="outline"
+                      render={<Link href="/admin" onClick={() => setMobileOpen(false)} />}
+                    >
+                      Administration
+                    </Button>
+                  )}
+                  <Button
+                    variant="outline"
+                    render={<Link href="/mon-compte" onClick={() => setMobileOpen(false)} />}
+                  >
+                    Mon compte
+                  </Button>
+                  <Button onClick={handleSignOut}>Déconnexion</Button>
+                </>
+              ) : (
+                <>
+                  <Button
+                    variant="outline"
+                    render={<Link href="/connexion" onClick={() => setMobileOpen(false)} />}
+                  >
+                    Connexion
+                  </Button>
+                  <Button render={<Link href="/inscription" onClick={() => setMobileOpen(false)} />}>
+                    Inscription
+                  </Button>
+                </>
+              )}
+            </div>
+          </SheetContent>
+        </Sheet>
       </div>
     </header>
   );

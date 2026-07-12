@@ -10,7 +10,7 @@ export const roomSchema = z.object({
   category: roomCategoryEnum,
   amenities: z.array(z.string().trim().min(1)).default([]),
   images: z.array(z.url()).min(1, "Ajoutez au moins une photo."),
-  available: z.coerce.boolean().default(true),
+  available: z.boolean().default(true),
 });
 
 export type RoomInput = z.infer<typeof roomSchema>;
