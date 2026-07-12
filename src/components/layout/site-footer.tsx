@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 export function SiteFooter() {
@@ -5,7 +6,10 @@ export function SiteFooter() {
     <footer className="border-t bg-muted/30">
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 sm:grid-cols-2 md:grid-cols-4">
         <div>
-          <p className="text-lg font-bold">Reservia</p>
+          <div className="flex items-center gap-2">
+            <Image src="/logo-mark.png" alt="Reservia" width={28} height={28} className="h-7 w-7" />
+            <p className="text-lg font-bold">Reservia</p>
+          </div>
           <p className="mt-2 text-sm text-muted-foreground">
             Un séjour d&apos;exception commence par une réservation simple et fiable.
           </p>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
@@ -36,10 +37,11 @@ export function SiteHeader() {
   }
 
   return (
-    <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-40 border-b border-[#a9843f]/40 bg-[#c9a84c] backdrop-blur supports-[backdrop-filter]:bg-[#c9a84c]/95">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
-        <Link href="/" className="text-xl font-bold tracking-tight">
-          Reservia
+        <Link href="/" className="flex items-center gap-2">
+          <Image src="/logo-mark.png" alt="Reservia" width={36} height={36} className="h-9 w-9" priority />
+          <span className="text-xl font-bold tracking-tight text-neutral-900">Reservia</span>
         </Link>
 
         <nav className="hidden items-center gap-6 md:flex">
@@ -47,8 +49,8 @@ export function SiteHeader() {
             <Link
               key={link.href}
               href={link.href}
-              className={`text-sm font-medium transition-colors hover:text-foreground ${
-                pathname === link.href ? "text-foreground" : "text-muted-foreground"
+              className={`text-sm font-medium transition-colors hover:text-neutral-900 ${
+                pathname === link.href ? "text-neutral-900" : "text-neutral-900/70"
               }`}
             >
               {link.label}
@@ -60,11 +62,21 @@ export function SiteHeader() {
           {status === "authenticated" && session.user ? (
             <>
               {session.user.role === "ADMIN" && (
-                <Button variant="ghost" size="sm" render={<Link href="/admin" />}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-neutral-900 hover:bg-black/10 hover:text-neutral-900"
+                  render={<Link href="/admin" />}
+                >
                   Administration
                 </Button>
               )}
-              <Button variant="ghost" size="sm" render={<Link href="/mon-compte" />}>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-neutral-900 hover:bg-black/10 hover:text-neutral-900"
+                render={<Link href="/mon-compte" />}
+              >
                 Mon compte
               </Button>
               <Button variant="outline" size="sm" onClick={handleSignOut}>
@@ -73,7 +85,12 @@ export function SiteHeader() {
             </>
           ) : status === "loading" ? null : (
             <>
-              <Button variant="ghost" size="sm" render={<Link href="/connexion" />}>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-neutral-900 hover:bg-black/10 hover:text-neutral-900"
+                render={<Link href="/connexion" />}
+              >
                 Connexion
               </Button>
               <Button size="sm" render={<Link href="/inscription" />}>
@@ -86,14 +103,21 @@ export function SiteHeader() {
         <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
           <SheetTrigger
             render={
-              <Button variant="ghost" size="icon" className="md:hidden">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-neutral-900 hover:bg-black/10 hover:text-neutral-900 md:hidden"
+              >
                 <Menu className="h-5 w-5" />
               </Button>
             }
           />
           <SheetContent>
             <SheetHeader>
-              <SheetTitle>Reservia</SheetTitle>
+              <SheetTitle className="flex items-center gap-2">
+                <Image src="/logo-mark.png" alt="Reservia" width={28} height={28} className="h-7 w-7" />
+                Reservia
+              </SheetTitle>
             </SheetHeader>
             <nav className="flex flex-col gap-1 px-4">
               {navLinks.map((link) => (
