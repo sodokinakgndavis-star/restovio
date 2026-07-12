@@ -13,7 +13,11 @@ import {
 } from "@/components/ui/select";
 import { bookingStatusLabels } from "@/lib/format";
 
-export function BookingFilters() {
+export function BookingFilters({
+  searchPlaceholder = "Rechercher un client, une chambre…",
+}: {
+  searchPlaceholder?: string;
+}) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -41,7 +45,7 @@ export function BookingFilters() {
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
       <Input
-        placeholder="Rechercher un client, une chambre…"
+        placeholder={searchPlaceholder}
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         onKeyDown={(e) => e.key === "Enter" && applyFilters(search, status, date)}

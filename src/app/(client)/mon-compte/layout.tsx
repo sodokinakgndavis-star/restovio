@@ -14,6 +14,12 @@ export default function MonCompteLayout({ children }: { children: React.ReactNod
         >
           Mes réservations
         </Link>
+        <Link
+          href="/mon-compte/tables"
+          className="border-b-2 border-transparent px-1 pb-3 hover:border-foreground"
+        >
+          Mes tables
+        </Link>
       </nav>
       <div className="mt-8">{children}</div>
     </div>
