@@ -21,21 +21,30 @@ export function BookingFilters() {
 
   const [search, setSearch] = useState(searchParams.get("search") ?? "");
   const [status, setStatus] = useState(searchParams.get("status") ?? "all");
+  const [date, setDate] = useState(searchParams.get("date") ?? "");
 
-  function applyFilters(nextSearch: string, nextStatus: string) {
+  function applyFilters(nextSearch: string, nextStatus: string, nextDate: string) {
     const params = new URLSearchParams();
     if (nextSearch) params.set("search", nextSearch);
     if (nextStatus && nextStatus !== "all") params.set("status", nextStatus);
+    if (nextDate) params.set("date", nextDate);
     startTransition(() => router.push(`${pathname}?${params.toString()}`));
   }
 
+  function resetFilters() {
+    setSearch("");
+    setStatus("all");
+    setDate("");
+    startTransition(() => router.push(pathname));
+  }
+
   return (
-    <div className="flex flex-col gap-3 sm:flex-row">
+    <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
       <Input
         placeholder="Rechercher un client, une chambre…"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        onKeyDown={(e) => e.key === "Enter" && applyFilters(search, status)}
+        onKeyDown={(e) => e.key === "Enter" && applyFilters(search, status, date)}
         className="sm:max-w-xs"
       />
       <Select
@@ -43,7 +52,7 @@ export function BookingFilters() {
         onValueChange={(value) => {
           const nextStatus = value ?? "all";
           setStatus(nextStatus);
-          applyFilters(search, nextStatus);
+          applyFilters(search, nextStatus, date);
         }}
       >
         <SelectTrigger className="sm:w-48">
@@ -58,9 +67,23 @@ export function BookingFilters() {
           ))}
         </SelectContent>
       </Select>
-      <Button variant="outline" disabled={isPending} onClick={() => applyFilters(search, status)}>
-        Rechercher
-      </Button>
+      <Input
+        type="date"
+        value={date}
+        onChange={(e) => {
+          setDate(e.target.value);
+          applyFilters(search, status, e.target.value);
+        }}
+        className="sm:w-44"
+      />
+      <div className="flex gap-2">
+        <Button variant="outline" disabled={isPending} onClick={() => applyFilters(search, status, date)}>
+          Rechercher
+        </Button>
+        <Button variant="ghost" disabled={isPending} onClick={resetFilters}>
+          Réinitialiser
+        </Button>
+      </div>
     </div>
   );
 }

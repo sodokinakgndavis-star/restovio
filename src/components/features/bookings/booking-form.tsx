@@ -1,11 +1,12 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
+import { CheckCircle2, XCircle, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -17,11 +18,14 @@ type BookingFormProps = {
   room: { id: string; price: number; capacity: number };
 };
 
+type AvailabilityState = "idle" | "checking" | "available" | "unavailable" | "error";
+
 export function BookingForm({ room }: BookingFormProps) {
   const { data: session, status } = useSession();
   const router = useRouter();
   const pathname = usePathname();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [availability, setAvailability] = useState<AvailabilityState>("idle");
 
   const {
     register,
@@ -45,9 +49,47 @@ export function BookingForm({ room }: BookingFormProps) {
     return { nights, total: nights * room.price };
   }, [checkIn, checkOut, room.price]);
 
+  // Vérification de la disponibilité réelle de la chambre sur la période choisie
+  // (section 11 du cahier des charges), avant même la tentative de réservation.
+  useEffect(() => {
+    if (!checkIn || !checkOut || new Date(checkOut) <= new Date(checkIn)) {
+      setAvailability("idle");
+      return;
+    }
+
+    let cancelled = false;
+    setAvailability("checking");
+
+    const timeout = setTimeout(async () => {
+      try {
+        const params = new URLSearchParams({ checkIn, checkOut });
+        const res = await fetch(`/api/rooms/${room.id}/availability?${params.toString()}`);
+        const data = await res.json();
+        if (cancelled) return;
+        if (!res.ok) {
+          setAvailability("error");
+          return;
+        }
+        setAvailability(data.available ? "available" : "unavailable");
+      } catch {
+        if (!cancelled) setAvailability("error");
+      }
+    }, 400);
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timeout);
+    };
+  }, [checkIn, checkOut, room.id]);
+
   async function onSubmit(values: BookingInput) {
     if (status !== "authenticated") {
       router.push(`/connexion?callbackUrl=${encodeURIComponent(pathname)}`);
+      return;
+    }
+
+    if (availability === "unavailable") {
+      toast.error("Cette chambre n'est pas disponible sur les dates sélectionnées.");
       return;
     }
 
@@ -94,6 +136,35 @@ export function BookingForm({ room }: BookingFormProps) {
         </div>
       </div>
 
+      {availability !== "idle" && (
+        <div
+          className={`flex items-center gap-2 rounded-md p-2.5 text-sm ${
+            availability === "available"
+              ? "bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-400"
+              : availability === "unavailable"
+                ? "bg-destructive/10 text-destructive"
+                : "bg-muted text-muted-foreground"
+          }`}
+        >
+          {availability === "checking" && (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" /> Vérification de la disponibilité…
+            </>
+          )}
+          {availability === "available" && (
+            <>
+              <CheckCircle2 className="h-4 w-4" /> Chambre disponible sur ces dates.
+            </>
+          )}
+          {availability === "unavailable" && (
+            <>
+              <XCircle className="h-4 w-4" /> Chambre indisponible sur ces dates.
+            </>
+          )}
+          {availability === "error" && <>Impossible de vérifier la disponibilité.</>}
+        </div>
+      )}
+
       <div className="space-y-1.5">
         <Label htmlFor="guests">Nombre de personnes</Label>
         <Input id="guests" type="number" min={1} max={room.capacity} {...register("guests")} />
@@ -117,7 +188,11 @@ export function BookingForm({ room }: BookingFormProps) {
         </div>
       )}
 
-      <Button type="submit" disabled={isSubmitting} className="w-full">
+      <Button
+        type="submit"
+        disabled={isSubmitting || availability === "unavailable" || availability === "checking"}
+        className="w-full"
+      >
         {isSubmitting
           ? "Réservation en cours…"
           : status === "authenticated"

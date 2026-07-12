@@ -28,6 +28,7 @@ export async function getBookingById(id: string) {
 export type AdminBookingFilters = {
   status?: BookingStatus;
   search?: string;
+  date?: string;
   page?: number;
   pageSize?: number;
 };
@@ -44,6 +45,16 @@ export async function getBookingsForAdmin(filters: AdminBookingFilters) {
       { user: { email: { contains: filters.search, mode: "insensitive" } } },
       { room: { name: { contains: filters.search, mode: "insensitive" } } },
     ];
+  }
+  if (filters.date) {
+    const day = new Date(filters.date);
+    if (!isNaN(day.getTime())) {
+      const nextDay = new Date(day);
+      nextDay.setDate(nextDay.getDate() + 1);
+      // Réservations dont le séjour couvre la date sélectionnée.
+      where.checkIn = { lt: nextDay };
+      where.checkOut = { gt: day };
+    }
   }
 
   const [bookings, total] = await Promise.all([

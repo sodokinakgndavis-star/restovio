@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   Table,
   TableBody,
@@ -14,13 +15,14 @@ import { formatPrice } from "@/lib/format";
 import type { BookingStatus } from "@prisma/client";
 
 export const metadata = { title: "Gestion des réservations" };
+export const dynamic = "force-dynamic";
 
 const VALID_STATUSES = ["PENDING", "CONFIRMED", "CANCELLED"];
 
 export default async function AdminBookingsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ search?: string; status?: string; page?: string }>;
+  searchParams: Promise<{ search?: string; status?: string; date?: string; page?: string }>;
 }) {
   const params = await searchParams;
   const status =
@@ -31,6 +33,7 @@ export default async function AdminBookingsPage({
   const { bookings, total } = await getBookingsForAdmin({
     search: params.search,
     status,
+    date: params.date,
     page: params.page ? Number(params.page) : 1,
   });
 
@@ -75,7 +78,15 @@ export default async function AdminBookingsPage({
                     <BookingStatusBadge status={booking.status} />
                   </TableCell>
                   <TableCell>
-                    <BookingActions bookingId={booking.id} status={booking.status} />
+                    <div className="flex items-center justify-end gap-1">
+                      <Link
+                        href={`/admin/reservations/${booking.id}`}
+                        className="text-sm text-muted-foreground hover:text-foreground hover:underline"
+                      >
+                        Détail
+                      </Link>
+                      <BookingActions bookingId={booking.id} status={booking.status} />
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}

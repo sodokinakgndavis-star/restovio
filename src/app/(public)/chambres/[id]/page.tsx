@@ -62,12 +62,23 @@ export default async function RoomDetailPage({ params }: { params: Promise<{ id:
 
         <div>
           <div className="sticky top-24 rounded-xl border bg-background p-6 shadow-sm">
-            <p className="text-2xl font-bold">
-              {formatPrice(room.price)}{" "}
-              <span className="text-sm font-normal text-muted-foreground">/ nuit</span>
-            </p>
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <p className="text-2xl font-bold">
+                {formatPrice(room.price)}{" "}
+                <span className="text-sm font-normal text-muted-foreground">/ nuit</span>
+              </p>
+              <Badge variant={room.available ? "default" : "secondary"}>
+                {room.available ? "Disponible" : "En pause commerciale"}
+              </Badge>
+            </div>
             <div className="mt-6">
-              <BookingForm room={{ id: room.id, price: room.price, capacity: room.capacity }} />
+              {room.available ? (
+                <BookingForm room={{ id: room.id, price: room.price, capacity: room.capacity }} />
+              ) : (
+                <p className="rounded-md bg-muted p-3 text-sm text-muted-foreground">
+                  Cette chambre n&apos;est pas ouverte à la réservation pour le moment.
+                </p>
+              )}
             </div>
           </div>
         </div>
