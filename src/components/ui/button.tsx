@@ -51,6 +51,8 @@ function Button({
   size = "default",
   onPointerDown,
   children,
+  nativeButton,
+  render,
   ...props
 }: ButtonPrimitive.Props & VariantProps<typeof buttonVariants>) {
   const [glows, setGlows] = React.useState<Glow[]>([])
@@ -70,6 +72,10 @@ function Button({
       data-slot="button"
       className={cn(buttonVariants({ variant, size, className }))}
       onPointerDown={handlePointerDown}
+      // Un `render` personnalisé (ex. Link) n'est pas un <button> natif : le signaler
+      // à Base UI pour qu'il applique le bon rôle/clavier au lieu d'attendre un vrai bouton.
+      nativeButton={nativeButton ?? !render}
+      render={render}
       {...props}
     >
       {children}

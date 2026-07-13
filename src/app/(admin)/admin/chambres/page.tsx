@@ -74,6 +74,7 @@ export default async function AdminRoomsPage() {
                       <Button
                         variant="ghost"
                         size="icon-sm"
+                        aria-label={`Modifier ${room.name}`}
                         render={<Link href={`/admin/chambres/${room.id}`} />}
                       >
                         <Pencil className="h-4 w-4" />

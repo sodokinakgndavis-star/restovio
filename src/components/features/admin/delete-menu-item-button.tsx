@@ -40,7 +40,7 @@ export function DeleteMenuItemButton({ itemId, itemName }: { itemId: string; ite
     <AlertDialog>
       <AlertDialogTrigger
         render={
-          <Button variant="ghost" size="icon-sm">
+          <Button variant="ghost" size="icon-sm" aria-label={`Supprimer ${itemName}`}>
             <Trash2 className="h-4 w-4 text-destructive" />
           </Button>
         }

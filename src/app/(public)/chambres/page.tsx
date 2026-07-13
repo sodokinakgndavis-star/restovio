@@ -41,8 +41,9 @@ export default async function ChambresPage({
   });
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-12">
-      <h1 className="text-3xl font-bold">Nos chambres</h1>
+    <div className="mx-auto max-w-6xl px-4 py-14">
+      <p className="text-xs font-medium tracking-[0.2em] text-olive uppercase">Restovio · Firenze</p>
+      <h1 className="mt-2 font-heading text-4xl font-medium">Nos chambres</h1>
       <p className="mt-2 text-muted-foreground">{total} chambre(s) disponible(s)</p>
 
       <div className="mt-6">

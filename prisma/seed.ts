@@ -71,10 +71,10 @@ async function main() {
 
   const roomsData = [
     {
-      name: "Chambre Standard Vue Jardin",
-      slug: "chambre-standard-vue-jardin",
+      name: "Chambre Venezia",
+      slug: "chambre-venezia",
       description:
-        "Une chambre confortable et lumineuse donnant sur le jardin de l'hôtel, idéale pour un séjour en solo ou en couple.",
+        "Une chambre confortable et lumineuse aux tons chauds, idéale pour un séjour en solo ou en couple au cœur de Florence.",
       price: 8900,
       capacity: 2,
       category: RoomCategory.STANDARD,
@@ -82,10 +82,10 @@ async function main() {
       images: standardImages,
     },
     {
-      name: "Chambre Supérieure Balcon",
-      slug: "chambre-superieure-balcon",
+      name: "Chambre Firenze",
+      slug: "chambre-firenze",
       description:
-        "Chambre spacieuse avec balcon privé offrant une vue dégagée, parfaite pour profiter du calme en journée comme en soirée.",
+        "Chambre spacieuse avec balcon privé offrant une vue dégagée sur les toits de Florence, parfaite pour profiter du calme toscan.",
       price: 12900,
       capacity: 3,
       category: RoomCategory.SUPERIEURE,
@@ -93,10 +93,10 @@ async function main() {
       images: superieureImages,
     },
     {
-      name: "Suite Prestige",
-      slug: "suite-prestige",
+      name: "Suite Bellagio",
+      slug: "suite-bellagio",
       description:
-        "Notre suite la plus raffinée, avec salon séparé, literie premium et vue panoramique sur la ville.",
+        "Notre suite la plus raffinée, avec salon séparé, literie premium et vue panoramique, inspirée de l'élégance du lac de Côme.",
       price: 24900,
       capacity: 2,
       category: RoomCategory.SUITE,
@@ -104,10 +104,10 @@ async function main() {
       images: suiteImages,
     },
     {
-      name: "Chambre Familiale",
-      slug: "chambre-familiale",
+      name: "Suite Toscana",
+      slug: "suite-toscana",
       description:
-        "Grand espace pensé pour les familles, avec literie modulable et coin salon pour les enfants.",
+        "Grand espace chaleureux inspiré de la campagne toscane, pensé pour les familles avec literie modulable et coin salon pour les enfants.",
       price: 15900,
       capacity: 5,
       category: RoomCategory.FAMILIALE,

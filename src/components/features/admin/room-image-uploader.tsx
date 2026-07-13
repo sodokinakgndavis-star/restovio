@@ -72,6 +72,7 @@ export function RoomImageUploader({
             <button
               type="button"
               onClick={() => removeImage(url)}
+              aria-label="Supprimer cette image"
               className="absolute right-1 top-1 rounded-full bg-black/60 p-1 text-white hover:bg-black/80"
             >
               <X className="h-3 w-3" />

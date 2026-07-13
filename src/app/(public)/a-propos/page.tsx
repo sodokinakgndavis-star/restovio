@@ -18,39 +18,78 @@ const values = [
   },
 ];
 
+const venues = [
+  {
+    title: "Ristorante La Riviera",
+    description: "Notre restaurant gastronomique, pour un dîner raffiné ou en famille vue piscine.",
+  },
+  {
+    title: "Bellavita Spa",
+    description: "Un espace bien-être pensé pour la détente, entre soins et moments de calme.",
+  },
+  {
+    title: "Terrazza Firenze",
+    description: "Notre bar en terrasse, pour un aperitivo au coucher du soleil sur les toits de Florence.",
+  },
+];
+
 export default function AProposPage() {
   return (
     <div>
-      <section className="relative flex h-64 items-center justify-center overflow-hidden bg-[#1F3864] text-white">
+      <section className="relative flex h-72 items-center justify-center overflow-hidden bg-foreground text-ivory">
         <Image
           src="https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=1600"
           alt="Hall de l'hôtel Restovio"
           fill
-          className="object-cover opacity-40"
+          className="object-cover opacity-45"
         />
-        <h1 className="relative z-10 text-4xl font-bold">À propos de Restovio</h1>
+        <div className="relative z-10 text-center">
+          <p className="text-xs font-medium tracking-[0.3em] text-gold uppercase">Restovio</p>
+          <h1 className="mt-3 font-heading text-5xl font-medium">À propos</h1>
+        </div>
       </section>
 
       <section className="mx-auto max-w-3xl px-4 py-16">
         <p className="text-lg text-muted-foreground">
-          Restovio est un établissement hôtelier situé au cœur de la ville, où chaque détail
-          est pensé pour rendre votre séjour aussi agréable que mémorable. Depuis notre
-          ouverture, nous accueillons voyageurs d&apos;affaires et touristes dans un cadre
-          élégant et chaleureux.
+          Restovio est un établissement hôtelier situé au cœur de Florence, à quelques pas
+          du Ponte Vecchio, où chaque détail est pensé pour rendre votre séjour aussi
+          agréable que mémorable. Depuis notre ouverture, nous accueillons voyageurs
+          d&apos;affaires et touristes dans un cadre élégant inspiré des plus belles
+          maisons italiennes.
         </p>
         <p className="mt-4 text-lg text-muted-foreground">
-          Notre équipe s&apos;engage à offrir un service attentif et personnalisé, du moment
-          de la réservation jusqu&apos;à votre départ.
+          Notre équipe s&apos;engage à offrir un service attentif et personnalisé, du
+          moment de la réservation jusqu&apos;à votre départ.
         </p>
       </section>
 
-      <section className="bg-muted/30 py-16">
+      <section className="bg-secondary/40 py-16">
         <div className="mx-auto max-w-6xl px-4">
-          <h2 className="text-center text-3xl font-bold">Nos engagements</h2>
+          <div className="text-center">
+            <p className="text-xs font-medium tracking-[0.2em] text-olive uppercase">Sur place</p>
+            <h2 className="mt-2 font-heading text-3xl font-medium">Nos adresses</h2>
+          </div>
+          <div className="mt-10 grid gap-6 sm:grid-cols-3">
+            {venues.map((venue) => (
+              <div key={venue.title} className="rounded-lg border border-border/60 bg-card p-6 text-center">
+                <h3 className="font-heading font-medium">{venue.title}</h3>
+                <p className="mt-2 text-sm text-muted-foreground">{venue.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-16">
+        <div className="mx-auto max-w-6xl px-4">
+          <div className="text-center">
+            <p className="text-xs font-medium tracking-[0.2em] text-olive uppercase">Promesse</p>
+            <h2 className="mt-2 font-heading text-3xl font-medium">Nos engagements</h2>
+          </div>
           <div className="mt-10 grid gap-6 sm:grid-cols-3">
             {values.map((value) => (
-              <div key={value.title} className="rounded-lg border bg-background p-6">
-                <h3 className="font-semibold">{value.title}</h3>
+              <div key={value.title} className="rounded-lg border border-border/60 p-6">
+                <h3 className="font-heading font-medium">{value.title}</h3>
                 <p className="mt-2 text-sm text-muted-foreground">{value.description}</p>
               </div>
             ))}
@@ -58,36 +97,38 @@ export default function AProposPage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-3xl px-4 py-16">
-        <h2 className="text-center text-2xl font-bold">Loisirs et avantages</h2>
-        <ul className="mt-8 space-y-4 text-muted-foreground">
-          <li>
-            <span className="font-medium text-foreground">Remise longue durée : </span>
-            -30 % automatique sur tout séjour de 30 nuits ou plus.
-          </li>
-          <li>
-            <span className="font-medium text-foreground">Salle de cinéma : </span>
-            séance ouverte à tous les clients chaque vendredi soir.
-          </li>
-          <li>
-            <span className="font-medium text-foreground">Piscines : </span>
-            un bassin adultes et un bassin enfants, en accès libre pour tous les résidents.
-          </li>
-          <li>
-            <span className="font-medium text-foreground">Sorties : </span>
-            un chauffeur est disponible pour vos excursions ; sans véhicule personnel, le
-            tarif se négocie directement avec lui.
-          </li>
-          <li>
-            <span className="font-medium text-foreground">Restaurant : </span>
-            découvrez notre menu et réservez une table en famille avec vue sur la piscine
-            depuis la page{" "}
-            <Link href="/restaurant" className="underline underline-offset-4 hover:text-foreground">
-              Restaurant
-            </Link>
-            .
-          </li>
-        </ul>
+      <section className="bg-secondary/40 py-16">
+        <div className="mx-auto max-w-3xl px-4">
+          <h2 className="text-center font-heading text-2xl font-medium">Loisirs et avantages</h2>
+          <ul className="mt-8 space-y-4 text-muted-foreground">
+            <li>
+              <span className="font-medium text-foreground">Remise longue durée : </span>
+              -30 % automatique sur tout séjour de 30 nuits ou plus.
+            </li>
+            <li>
+              <span className="font-medium text-foreground">Salle de cinéma : </span>
+              séance ouverte à tous les clients chaque vendredi soir.
+            </li>
+            <li>
+              <span className="font-medium text-foreground">Piscines : </span>
+              un bassin adultes et un bassin enfants, en accès libre pour tous les résidents.
+            </li>
+            <li>
+              <span className="font-medium text-foreground">Sorties : </span>
+              un chauffeur est disponible pour vos excursions ; sans véhicule personnel, le
+              tarif se négocie directement avec lui.
+            </li>
+            <li>
+              <span className="font-medium text-foreground">Restaurant : </span>
+              découvrez notre menu et réservez une table en famille avec vue sur la
+              piscine depuis la page{" "}
+              <Link href="/restaurant" className="underline underline-offset-4 hover:text-foreground">
+                Restaurant
+              </Link>
+              .
+            </li>
+          </ul>
+        </div>
       </section>
     </div>
   );
