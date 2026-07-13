@@ -117,18 +117,34 @@ Créés par le script de seed (`npx prisma db seed`) :
 
 ## Déploiement
 
-Déploiement prévu sur Vercel, connecté au dépôt GitHub. Étapes :
+Déployé sur Vercel, connecté au dépôt GitHub (déploiement automatique à
+chaque push sur `main`). Base de données PostgreSQL hébergée sur Neon.
 
-1. Créer le projet sur Vercel et le lier au dépôt GitHub.
-2. Provisionner une base PostgreSQL (Neon ou Supabase).
-3. Renseigner toutes les variables de `.env.example` dans les paramètres
-   Vercel du projet (jamais dans le code).
-4. Exécuter `npx prisma migrate deploy` sur la base de production, puis
+1. Projet Vercel créé et lié au dépôt GitHub.
+2. Base PostgreSQL provisionnée sur Neon (connexion `DATABASE_URL` poolée
+   pour l'application + `DIRECT_URL` non-poolée pour les migrations Prisma).
+3. Variables d'environnement renseignées dans les paramètres Vercel du
+   projet (jamais dans le code).
+4. Migrations appliquées avec `npx prisma migrate deploy`, puis
    `npx prisma db seed` pour les comptes de démonstration.
-5. Vérifier les parcours critiques (connexion, réservation, dashboard) sur
-   l'URL de production avant la remise du projet.
+5. Parcours critiques (inscription, connexion, réservation de chambre,
+   réservation de table, dashboard admin, autorisations) vérifiés
+   directement en production — voir la recette de tests ci-dessous.
 
-> Lien de production : _à renseigner après déploiement._
+> **Lien de production : https://restovio.vercel.app**
+
+### Recette de production effectuée
+
+45 vérifications exécutées directement contre l'environnement de
+production (requêtes API réelles, pas seulement en local) : inscription
+(validation, unicité email, hashage bcrypt), connexion/déconnexion,
+autorisations serveur (client bloqué sur `/admin`, non-connecté bloqué sur
+`/mon-compte`, contrôle de propriété des réservations), catalogue et
+filtres, CRUD chambres admin, création de réservation avec toutes les
+règles de gestion (dates, capacité, chevauchement, calcul du montant),
+cycle complet réservation (confirmation, annulation, remboursement),
+tableau de bord admin (cohérence des indicateurs avec la base), menu du
+restaurant et réservation de table. Toutes les vérifications sont passées.
 
 ## Utilisation de l'intelligence artificielle
 
