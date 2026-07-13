@@ -24,16 +24,16 @@ export default function AProposPage() {
       <section className="relative flex h-64 items-center justify-center overflow-hidden bg-[#1F3864] text-white">
         <Image
           src="https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=1600"
-          alt="Hall de l'hôtel Reservia"
+          alt="Hall de l'hôtel Restovio"
           fill
           className="object-cover opacity-40"
         />
-        <h1 className="relative z-10 text-4xl font-bold">À propos de Reservia</h1>
+        <h1 className="relative z-10 text-4xl font-bold">À propos de Restovio</h1>
       </section>
 
       <section className="mx-auto max-w-3xl px-4 py-16">
         <p className="text-lg text-muted-foreground">
-          Reservia est un établissement hôtelier situé au cœur de la ville, où chaque détail
+          Restovio est un établissement hôtelier situé au cœur de la ville, où chaque détail
           est pensé pour rendre votre séjour aussi agréable que mémorable. Depuis notre
           ouverture, nous accueillons voyageurs d&apos;affaires et touristes dans un cadre
           élégant et chaleureux.

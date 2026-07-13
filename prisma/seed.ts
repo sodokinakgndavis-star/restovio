@@ -8,22 +8,22 @@ async function main() {
   const clientPassword = await bcrypt.hash("Client1234!", 10);
 
   const admin = await prisma.user.upsert({
-    where: { email: "admin@reservia.app" },
+    where: { email: "admin@restovio.app" },
     update: {},
     create: {
-      name: "Admin Reservia",
-      email: "admin@reservia.app",
+      name: "Admin Restovio",
+      email: "admin@restovio.app",
       password: adminPassword,
       role: "ADMIN",
     },
   });
 
   const client = await prisma.user.upsert({
-    where: { email: "client@reservia.app" },
+    where: { email: "client@restovio.app" },
     update: {},
     create: {
       name: "Client Demo",
-      email: "client@reservia.app",
+      email: "client@restovio.app",
       password: clientPassword,
       role: "CLIENT",
     },

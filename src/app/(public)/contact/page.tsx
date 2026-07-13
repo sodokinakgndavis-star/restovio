@@ -26,7 +26,7 @@ export default function ContactPage() {
         </div>
         <div>
           <p className="font-semibold">E-mail</p>
-          <p className="text-muted-foreground">contact@reservia.app</p>
+          <p className="text-muted-foreground">contact@restovio.app</p>
         </div>
       </div>
     </div>

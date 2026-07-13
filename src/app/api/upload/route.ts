@@ -35,7 +35,7 @@ export async function POST(request: Request) {
   try {
     const result = await new Promise<{ secure_url: string }>((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
-        { folder: "reservia/rooms" },
+        { folder: "restovio/rooms" },
         (error, result) => {
           if (error || !result) return reject(error);
           resolve(result);

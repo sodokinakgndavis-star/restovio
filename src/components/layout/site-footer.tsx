@@ -6,22 +6,22 @@ import { FacebookIcon, InstagramIcon, TiktokIcon, YoutubeIcon } from "@/componen
 const socialLinks = [
   {
     name: "Facebook",
-    href: "https://facebook.com/reservia.hotel",
+    href: "https://facebook.com/restovio.hotel",
     icon: FacebookIcon,
   },
   {
     name: "Instagram",
-    href: "https://instagram.com/reservia.hotel",
+    href: "https://instagram.com/restovio.hotel",
     icon: InstagramIcon,
   },
   {
     name: "TikTok",
-    href: "https://tiktok.com/@reservia.hotel",
+    href: "https://tiktok.com/@restovio.hotel",
     icon: TiktokIcon,
   },
   {
     name: "YouTube",
-    href: "https://youtube.com/@reservia.hotel",
+    href: "https://youtube.com/@restovio.hotel",
     icon: YoutubeIcon,
   },
 ];
@@ -45,8 +45,8 @@ export function SiteFooter() {
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 sm:grid-cols-2 md:grid-cols-4">
         <div>
           <div className="flex items-center gap-2">
-            <Image src="/logo-mark.png" alt="Reservia" width={28} height={28} className="h-7 w-7" />
-            <p className="text-lg font-bold">Reservia</p>
+            <Image src="/logo-mark.png" alt="Restovio" width={28} height={28} className="h-7 w-7" />
+            <p className="text-lg font-bold">Restovio</p>
           </div>
           <p className="mt-2 text-sm text-muted-foreground">
             Un séjour d&apos;exception commence par une réservation simple et fiable.
@@ -103,7 +103,7 @@ export function SiteFooter() {
           <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
             <li>{HOTEL_ADDRESS}</li>
             <li>+33 1 23 45 67 89</li>
-            <li>contact@reservia.app</li>
+            <li>contact@restovio.app</li>
           </ul>
         </div>
 
@@ -122,7 +122,7 @@ export function SiteFooter() {
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             <div className="overflow-hidden rounded-lg border">
               <iframe
-                title="Localisation de l'hôtel Reservia"
+                title="Localisation de l'hôtel Restovio"
                 src={OSM_EMBED_URL}
                 className="h-56 w-full"
                 loading="lazy"
@@ -163,7 +163,7 @@ export function SiteFooter() {
       </div>
 
       <div className="border-t py-6 text-center text-xs text-muted-foreground">
-        © {new Date().getFullYear()} Reservia. Tous droits réservés.
+        © {new Date().getFullYear()} Restovio. Tous droits réservés.
       </div>
     </footer>
   );

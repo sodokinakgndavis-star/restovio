@@ -86,7 +86,7 @@ export default async function HomePage() {
       <section className="relative flex min-h-[70vh] items-center justify-center overflow-hidden bg-[#1F3864] text-white">
         <Image
           src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=1600"
-          alt="Vue de l'hôtel Reservia"
+          alt="Vue de l'hôtel Restovio"
           fill
           priority
           className="object-cover opacity-40"
@@ -120,9 +120,9 @@ export default async function HomePage() {
       <section className="mx-auto max-w-6xl px-4 py-16">
         <div className="grid gap-10 md:grid-cols-2 md:items-center">
           <div>
-            <h2 className="text-3xl font-bold">Bienvenue chez Reservia</h2>
+            <h2 className="text-3xl font-bold">Bienvenue chez Restovio</h2>
             <p className="mt-4 text-muted-foreground">
-              Au cœur de la ville, Reservia vous accueille dans un cadre élégant et
+              Au cœur de la ville, Restovio vous accueille dans un cadre élégant et
               chaleureux. Que vous voyagiez pour affaires ou pour le plaisir, notre équipe
               met tout en œuvre pour rendre votre séjour mémorable.
             </p>

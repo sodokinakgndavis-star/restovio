@@ -16,11 +16,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Reservia — Réservation hôtelière",
-    template: "%s | Reservia",
+    default: "Restovio — Réservation hôtelière",
+    template: "%s | Restovio",
   },
   description:
-    "Reservia, plateforme de réservation et de gestion hôtelière. Consultez nos chambres et réservez votre séjour en toute simplicité.",
+    "Restovio, plateforme de réservation et de gestion hôtelière. Consultez nos chambres et réservez votre séjour en toute simplicité.",
 };
 
 export default function RootLayout({

@@ -42,13 +42,13 @@ export function SiteHeader() {
         <Link href="/" className="flex items-center gap-2">
           <Image
             src="/logo-mark-light.png"
-            alt="Reservia"
+            alt="Restovio"
             width={36}
             height={36}
             className="h-9 w-9"
             priority
           />
-          <span className="text-xl font-bold tracking-tight text-[#f5ead0]">Reservia</span>
+          <span className="text-xl font-bold tracking-tight text-[#f5ead0]">Restovio</span>
         </Link>
 
         <nav className="hidden items-center gap-6 md:flex">
@@ -122,8 +122,8 @@ export function SiteHeader() {
           <SheetContent>
             <SheetHeader>
               <SheetTitle className="flex items-center gap-2">
-                <Image src="/logo-mark.png" alt="Reservia" width={28} height={28} className="h-7 w-7" />
-                Reservia
+                <Image src="/logo-mark.png" alt="Restovio" width={28} height={28} className="h-7 w-7" />
+                Restovio
               </SheetTitle>
             </SheetHeader>
             <nav className="flex flex-col gap-1 px-4">

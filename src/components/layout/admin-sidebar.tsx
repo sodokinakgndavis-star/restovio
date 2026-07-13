@@ -29,9 +29,9 @@ export function AdminSidebar() {
   return (
     <aside className="hidden w-64 shrink-0 border-r bg-muted/20 md:block">
       <div className="flex h-16 items-center gap-2 border-b px-6">
-        <Image src="/logo-mark.png" alt="Reservia" width={28} height={28} className="h-7 w-7" />
+        <Image src="/logo-mark.png" alt="Restovio" width={28} height={28} className="h-7 w-7" />
         <Link href="/" className="text-lg font-bold">
-          Reservia <span className="text-muted-foreground font-normal">Admin</span>
+          Restovio <span className="text-muted-foreground font-normal">Admin</span>
         </Link>
       </div>
       <nav className="space-y-1 p-4">

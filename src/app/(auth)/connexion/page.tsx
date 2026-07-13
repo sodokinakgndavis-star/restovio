@@ -9,7 +9,7 @@ export default function ConnexionPage() {
     <div>
       <h1 className="text-2xl font-bold">Connexion</h1>
       <p className="mt-1 text-sm text-muted-foreground">
-        Accédez à votre espace personnel Reservia.
+        Accédez à votre espace personnel Restovio.
       </p>
 
       <div className="mt-6">

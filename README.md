@@ -1,9 +1,9 @@
-# Reservia
+# Restovio
 
 > Plateforme de réservation et de gestion hôtelière — projet de fin de
 > formation « Développeur Natif IA Web », LeDevFred Academy (2026).
 
-Reservia permet à un hôtel de présenter son offre de chambres, à un client
+Restovio permet à un hôtel de présenter son offre de chambres, à un client
 de rechercher et réserver une chambre en toute fiabilité, et à un
 administrateur de piloter l'activité (chambres, réservations, utilisateurs)
 depuis un tableau de bord dédié.
@@ -112,8 +112,8 @@ Créés par le script de seed (`npx prisma db seed`) :
 
 | Rôle | E-mail | Mot de passe |
 |---|---|---|
-| CLIENT | `client@reservia.app` | `Client1234!` |
-| ADMIN | `admin@reservia.app` | `Admin1234!` |
+| CLIENT | `client@restovio.app` | `Client1234!` |
+| ADMIN | `admin@restovio.app` | `Admin1234!` |
 
 ## Déploiement
 

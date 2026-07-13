@@ -14,7 +14,7 @@ export default async function RestaurantPage() {
       <section className="relative flex h-64 items-center justify-center overflow-hidden bg-[#1F3864] text-white">
         <Image
           src="https://images.unsplash.com/photo-1424847651672-bf20a4b0982b?w=1600"
-          alt="Restaurant Reservia"
+          alt="Restaurant Restovio"
           fill
           className="object-cover opacity-40"
         />
