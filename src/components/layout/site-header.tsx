@@ -60,13 +60,13 @@ export function SiteHeader() {
 
   return (
     <header
-      className={`sticky top-0 z-40 transition-all duration-300 ${
+      className={`fixed inset-x-0 top-0 z-40 transition-all duration-300 ${
         transparent
           ? "border-b border-transparent bg-transparent"
           : "border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/90"
       }`}
     >
-      <div className="mx-auto flex h-18 max-w-6xl items-center justify-between px-4 py-3">
+      <div className="mx-auto flex h-20 max-w-6xl items-center justify-between px-4">
         <Link href="/" className="flex items-center gap-2.5">
           <Image
             src={transparent ? "/logo-mark-light.png" : "/logo-mark.png"}

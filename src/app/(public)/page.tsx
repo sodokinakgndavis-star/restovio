@@ -106,7 +106,7 @@ export default async function HomePage() {
   return (
     <div>
       {/* HERO + moteur de réservation */}
-      <section className="relative flex min-h-[92vh] flex-col items-center justify-center overflow-hidden bg-foreground text-ivory">
+      <section className="relative -mt-20 flex min-h-[92vh] flex-col items-center justify-center overflow-hidden bg-foreground text-ivory">
         <Image
           src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=1920"
           alt="Vue de l'hôtel Restovio à Florence"
