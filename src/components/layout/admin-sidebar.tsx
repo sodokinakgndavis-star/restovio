@@ -94,7 +94,7 @@ export function AdminSidebar() {
         <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
           <SheetTrigger
             render={
-              <Button variant="ghost" size="icon">
+              <Button variant="ghost" size="icon" aria-label="Ouvrir le menu">
                 <Menu className="h-5 w-5" />
               </Button>
             }

@@ -22,6 +22,7 @@ export function GalleryLightbox({ images }: { images: string[] }) {
         <button
           type="button"
           onClick={() => setActiveIndex(0)}
+          aria-label="Agrandir la photo 1"
           className="group relative block aspect-video w-full overflow-hidden rounded-lg"
         >
           <Image
@@ -37,6 +38,7 @@ export function GalleryLightbox({ images }: { images: string[] }) {
               key={src}
               type="button"
               onClick={() => setActiveIndex(i + 1)}
+              aria-label={`Agrandir la photo ${i + 2}`}
               className="group relative aspect-square overflow-hidden rounded-lg"
             >
               <Image
@@ -66,6 +68,7 @@ export function GalleryLightbox({ images }: { images: string[] }) {
                 variant="ghost"
                 size="icon"
                 onClick={showPrev}
+                aria-label="Photo précédente"
                 className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 text-white hover:bg-black/60"
               >
                 <ChevronLeft className="h-5 w-5" />
@@ -75,6 +78,7 @@ export function GalleryLightbox({ images }: { images: string[] }) {
                 variant="ghost"
                 size="icon"
                 onClick={showNext}
+                aria-label="Photo suivante"
                 className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 text-white hover:bg-black/60"
               >
                 <ChevronRight className="h-5 w-5" />

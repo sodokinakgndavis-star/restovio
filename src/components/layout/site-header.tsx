@@ -154,7 +154,7 @@ export function SiteHeader() {
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger
               render={
-                <Button variant="ghost" size="icon" className={ghostBtn}>
+                <Button variant="ghost" size="icon" className={ghostBtn} aria-label="Ouvrir le menu">
                   <Menu className="h-5 w-5" />
                 </Button>
               }

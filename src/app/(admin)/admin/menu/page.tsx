@@ -67,6 +67,7 @@ export default async function AdminMenuPage() {
                       <Button
                         variant="ghost"
                         size="icon-sm"
+                        aria-label={`Modifier ${item.name}`}
                         render={<Link href={`/admin/menu/${item.id}`} />}
                       >
                         <Pencil className="h-4 w-4" />
