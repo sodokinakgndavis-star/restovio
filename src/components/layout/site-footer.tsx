@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { MapPin } from "lucide-react";
+import { MapPin, ShieldCheck, RefreshCcw, BadgePercent, Clock } from "lucide-react";
 import { FacebookIcon, InstagramIcon, TiktokIcon, YoutubeIcon } from "@/components/icons/social-icons";
 
 const socialLinks = [
@@ -26,36 +26,51 @@ const socialLinks = [
   },
 ];
 
-const partners = [
-  "Air Voyage",
-  "CityPass Découverte",
-  "Prestige Auto Location",
-  "Le Comptoir Gourmand",
-  "SpaZen Bien-être",
+const badges = [
+  { icon: ShieldCheck, label: "Réservation sécurisée" },
+  { icon: RefreshCcw, label: "Annulation flexible" },
+  { icon: BadgePercent, label: "Meilleur tarif garanti" },
+  { icon: Clock, label: "Support 24h/24" },
 ];
 
-const HOTEL_ADDRESS = "12 rue des Voyageurs, 75000 Paris";
+const legalLinks = [
+  { href: "/faq", label: "FAQ" },
+  { href: "/mentions-legales", label: "Mentions légales" },
+  { href: "/confidentialite", label: "Politique de confidentialité" },
+  { href: "/cgu", label: "Conditions générales" },
+  { href: "/politique-annulation", label: "Politique d'annulation" },
+];
+
+const HOTEL_ADDRESS = "Via della Riviera 24, 50122 Firenze, Italia";
 const GOOGLE_MAPS_URL = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(HOTEL_ADDRESS)}`;
 const OSM_EMBED_URL =
-  "https://www.openstreetmap.org/export/embed.html?bbox=2.3372%2C48.8486%2C2.3672%2C48.8646&layer=mapnik&marker=48.8566%2C2.3522";
+  "https://www.openstreetmap.org/export/embed.html?bbox=11.2408%2C43.7616%2C11.2708%2C43.7776&layer=mapnik&marker=43.7696%2C11.2558";
 
 export function SiteFooter() {
   return (
-    <footer className="border-t bg-muted/30">
+    <footer className="border-t border-border/60 bg-secondary/40">
+      <div className="border-b border-border/60">
+        <div className="mx-auto grid max-w-6xl gap-6 px-4 py-8 sm:grid-cols-2 lg:grid-cols-4">
+          {badges.map((badge) => (
+            <div key={badge.label} className="flex items-center gap-3">
+              <badge.icon className="h-5 w-5 shrink-0 text-olive" />
+              <span className="text-sm font-medium">{badge.label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 sm:grid-cols-2 md:grid-cols-4">
         <div>
           <div className="flex items-center gap-2">
             <Image src="/logo-mark.png" alt="Restovio" width={28} height={28} className="h-7 w-7" />
-            <p className="text-lg font-bold">Restovio</p>
+            <p className="font-heading text-lg font-medium">Restovio</p>
           </div>
           <p className="mt-2 text-sm text-muted-foreground">
-            Un séjour d&apos;exception commence par une réservation simple et fiable.
+            Un séjour d&apos;exception au cœur de Florence.
           </p>
 
           <p className="mt-5 text-sm font-semibold">Suivez-nous</p>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Actualités, offres et coulisses de l&apos;hôtel sur nos réseaux.
-          </p>
           <div className="mt-3 flex items-center gap-3">
             {socialLinks.map((social) => (
               <Link
@@ -102,25 +117,34 @@ export function SiteFooter() {
           <p className="text-sm font-semibold">Coordonnées</p>
           <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
             <li>{HOTEL_ADDRESS}</li>
-            <li>+33 1 23 45 67 89</li>
+            <li>+39 055 123 4567</li>
             <li>contact@restovio.app</li>
+          </ul>
+          <p className="mt-5 text-sm font-semibold">Réception</p>
+          <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
+            <li>Lundi – Dimanche · 7h00 – 22h00</li>
           </ul>
         </div>
 
         <div>
-          <p className="text-sm font-semibold">Horaires de la réception</p>
+          <p className="text-sm font-semibold">Informations</p>
           <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-            <li>Lundi – Dimanche</li>
-            <li>7h00 – 22h00</li>
+            {legalLinks.map((link) => (
+              <li key={link.href}>
+                <Link href={link.href} className="hover:text-foreground">
+                  {link.label}
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
       </div>
 
-      <div className="border-t">
+      <div className="border-t border-border/60">
         <div className="mx-auto max-w-6xl px-4 py-10">
           <p className="text-sm font-semibold">Nous trouver</p>
-          <div className="mt-4 grid gap-4 sm:grid-cols-2">
-            <div className="overflow-hidden rounded-lg border">
+          <div className="mt-4 grid gap-6 sm:grid-cols-2">
+            <div className="overflow-hidden rounded-lg border border-border/60">
               <iframe
                 title="Localisation de l'hôtel Restovio"
                 src={OSM_EMBED_URL}
@@ -134,35 +158,24 @@ export function SiteFooter() {
                 href={GOOGLE_MAPS_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-3 inline-flex w-fit items-center gap-1.5 text-sm font-medium text-foreground underline underline-offset-4 hover:text-primary"
+                className="mt-2 inline-flex w-fit items-center gap-1.5 text-sm font-medium text-foreground underline underline-offset-4 hover:text-olive"
               >
                 <MapPin className="h-4 w-4" />
                 Ouvrir dans Google Maps
               </Link>
+
+              <ul className="mt-5 space-y-2 text-sm text-muted-foreground">
+                <li>Ponte Vecchio — 6 min à pied</li>
+                <li>Duomo di Firenze — 10 min à pied</li>
+                <li>Gare de Firenze Santa Maria Novella — 12 min à pied</li>
+                <li>Aéroport de Florence (A. Vespucci) — 20 min en voiture</li>
+              </ul>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="border-t">
-        <div className="mx-auto max-w-6xl px-4 py-8">
-          <p className="text-center text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-            Nos partenaires
-          </p>
-          <div className="mt-4 flex flex-wrap items-center justify-center gap-x-8 gap-y-3">
-            {partners.map((partner) => (
-              <span
-                key={partner}
-                className="text-sm font-medium text-muted-foreground/70 grayscale transition hover:text-muted-foreground hover:grayscale-0"
-              >
-                {partner}
-              </span>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <div className="border-t py-6 text-center text-xs text-muted-foreground">
+      <div className="border-t border-border/60 py-6 text-center text-xs text-muted-foreground">
         © {new Date().getFullYear()} Restovio. Tous droits réservés.
       </div>
     </footer>
