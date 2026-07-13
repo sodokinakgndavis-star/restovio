@@ -220,7 +220,7 @@ export function BookingForm({ room }: BookingFormProps) {
       <Button
         type="submit"
         disabled={isSubmitting || availability === "unavailable" || availability === "checking"}
-        className="w-full"
+        className="w-full bg-olive text-olive-foreground hover:bg-olive/85"
       >
         {isSubmitting
           ? "Réservation en cours…"
