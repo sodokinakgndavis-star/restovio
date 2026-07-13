@@ -85,12 +85,12 @@ export function SiteHeader() {
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-7 md:flex">
+        <nav className="hidden items-center gap-6 xl:flex">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className={`text-[13px] font-medium tracking-wide uppercase transition-colors ${
+              className={`text-[13px] font-medium tracking-wide whitespace-nowrap uppercase transition-colors ${
                 pathname === link.href ? linkColorActive : linkColor
               }`}
             >
@@ -99,7 +99,7 @@ export function SiteHeader() {
           ))}
         </nav>
 
-        <div className="hidden items-center gap-2 md:flex">
+        <div className="hidden items-center gap-1.5 xl:flex">
           {status === "authenticated" && session.user ? (
             <>
               {session.user.role === "ADMIN" && (
@@ -124,15 +124,28 @@ export function SiteHeader() {
                 variant="ghost"
                 size="sm"
                 className={ghostBtn}
+                render={<Link href="/mon-compte/reservations" />}
+              >
+                Mes réservations
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className={ghostBtn}
                 onClick={handleSignOut}
               >
                 Déconnexion
               </Button>
             </>
           ) : status === "loading" ? null : (
-            <Button variant="ghost" size="sm" className={ghostBtn} render={<Link href="/connexion" />}>
-              Connexion
-            </Button>
+            <>
+              <Button variant="ghost" size="sm" className={ghostBtn} render={<Link href="/connexion" />}>
+                Se connecter
+              </Button>
+              <Button variant="ghost" size="sm" className={ghostBtn} render={<Link href="/inscription" />}>
+                Créer un compte
+              </Button>
+            </>
           )}
           <Button
             size="sm"
@@ -143,7 +156,7 @@ export function SiteHeader() {
           </Button>
         </div>
 
-        <div className="flex items-center gap-2 md:hidden">
+        <div className="flex items-center gap-2 xl:hidden">
           <Button
             size="sm"
             className="bg-olive text-olive-foreground hover:bg-olive/85"
@@ -195,6 +208,12 @@ export function SiteHeader() {
                     >
                       Mon compte
                     </Button>
+                    <Button
+                      variant="outline"
+                      render={<Link href="/mon-compte/reservations" onClick={() => setMobileOpen(false)} />}
+                    >
+                      Mes réservations
+                    </Button>
                     <Button onClick={handleSignOut}>Déconnexion</Button>
                   </>
                 ) : (
@@ -203,10 +222,10 @@ export function SiteHeader() {
                       variant="outline"
                       render={<Link href="/connexion" onClick={() => setMobileOpen(false)} />}
                     >
-                      Connexion
+                      Se connecter
                     </Button>
                     <Button render={<Link href="/inscription" onClick={() => setMobileOpen(false)} />}>
-                      Inscription
+                      Créer un compte
                     </Button>
                   </>
                 )}

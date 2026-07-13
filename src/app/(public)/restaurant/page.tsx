@@ -9,7 +9,7 @@ export const revalidate = 60;
 
 export default async function RestaurantPage() {
   const items = await getMenuItems();
-  const signatureDishes = items.slice(0, 3);
+  const signatureDishes = items.filter((item) => item.category === "PLAT").slice(0, 3);
 
   return (
     <div>

@@ -30,7 +30,7 @@ const badges = [
   { icon: ShieldCheck, label: "Réservation sécurisée" },
   { icon: RefreshCcw, label: "Annulation flexible" },
   { icon: BadgePercent, label: "Meilleur tarif garanti" },
-  { icon: Clock, label: "Support 24h/24" },
+  { icon: Clock, label: "Support 7j/7" },
 ];
 
 const legalLinks = [

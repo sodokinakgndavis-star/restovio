@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
 import { CheckCircle2, XCircle, Loader2 } from "lucide-react";
@@ -25,6 +25,7 @@ export function BookingForm({ room }: BookingFormProps) {
   const { data: session, status } = useSession();
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [availability, setAvailability] = useState<AvailabilityState>("idle");
 
@@ -35,7 +36,16 @@ export function BookingForm({ room }: BookingFormProps) {
     formState: { errors },
   } = useForm({
     resolver: zodResolver(bookingSchema),
-    defaultValues: { roomId: room.id, checkIn: "", checkOut: "", guests: 1, comment: "" },
+    // Les dates/voyageurs peuvent arriver via l'URL (retour de la page de connexion,
+    // section 4 du cahier des charges de finition) afin de ne pas faire ressaisir
+    // au visiteur les informations déjà renseignées avant qu'on lui demande de se connecter.
+    defaultValues: {
+      roomId: room.id,
+      checkIn: searchParams.get("checkIn") ?? "",
+      checkOut: searchParams.get("checkOut") ?? "",
+      guests: searchParams.get("guests") ? Number(searchParams.get("guests")) : 1,
+      comment: searchParams.get("comment") ?? "",
+    },
   });
 
   const checkIn = watch("checkIn");
@@ -87,7 +97,14 @@ export function BookingForm({ room }: BookingFormProps) {
 
   async function onSubmit(values: BookingInput) {
     if (status !== "authenticated") {
-      router.push(`/connexion?callbackUrl=${encodeURIComponent(pathname)}`);
+      const params = new URLSearchParams();
+      if (values.checkIn) params.set("checkIn", values.checkIn);
+      if (values.checkOut) params.set("checkOut", values.checkOut);
+      if (values.guests) params.set("guests", String(values.guests));
+      if (values.comment) params.set("comment", values.comment);
+      const query = params.toString();
+      const callbackUrl = `${pathname}${query ? `?${query}` : ""}#reserver`;
+      router.push(`/connexion?callbackUrl=${encodeURIComponent(callbackUrl)}`);
       return;
     }
 
@@ -180,34 +197,49 @@ export function BookingForm({ room }: BookingFormProps) {
       </div>
 
       {estimate && (
-        <div className="space-y-1.5 rounded-md bg-muted p-3 text-sm">
+        <div className="space-y-2 rounded-md bg-muted p-4 text-sm">
+          <div className="flex items-center justify-between">
+            <span className="text-muted-foreground">Prix par nuit</span>
+            <span>{formatPrice(room.price)}</span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-muted-foreground">Nombre de nuits</span>
+            <span>{estimate.nights}</span>
+          </div>
+          <div className="flex items-center justify-between border-t border-border/60 pt-2">
+            <span className="text-muted-foreground">Sous-total</span>
+            <span className={estimate.discounted ? "text-muted-foreground line-through" : ""}>
+              {formatPrice(estimate.subtotal)}
+            </span>
+          </div>
           {estimate.discounted ? (
             <div className="flex items-center justify-between">
-              <span className="text-muted-foreground line-through">
-                {formatPrice(estimate.subtotal)}
-              </span>
-              <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
-                Remise longue durée -30 %
+              <span className="text-muted-foreground">Réduction longue durée (-30 %)</span>
+              <span className="font-medium text-olive">
+                -{formatPrice(estimate.subtotal - estimate.total)}
               </span>
             </div>
           ) : (
             checkIn &&
             checkOut && (
-              <p className="text-xs text-muted-foreground">
-                Séjour de {LONG_STAY_MIN_NIGHTS} nuits ou plus : -30 % automatique.
-              </p>
+              <div className="flex items-center justify-between">
+                <span className="text-muted-foreground">Réduction éventuelle</span>
+                <span className="text-xs text-muted-foreground">
+                  Aucune (à partir de {LONG_STAY_MIN_NIGHTS} nuits)
+                </span>
+              </div>
             )
           )}
-          <p>
-            {estimate.nights} nuit(s) — estimation :{" "}
+          <div className="flex items-center justify-between border-t border-border/60 pt-2">
+            <span className="font-medium text-foreground">Montant total</span>
             <span className="font-semibold">{formatPrice(estimate.total)}</span>
-          </p>
-          <div className="flex items-center justify-between border-t border-border/60 pt-1.5">
+          </div>
+          <div className="flex items-center justify-between">
             <span className="text-muted-foreground">Acompte à régler (50 %)</span>
             <span className="font-semibold">{formatPrice(estimate.deposit)}</span>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-muted-foreground">Solde à régler sur place</span>
+            <span className="text-muted-foreground">Solde restant sur place</span>
             <span>{formatPrice(estimate.remaining)}</span>
           </div>
           <p className="mt-1 text-xs text-muted-foreground">
