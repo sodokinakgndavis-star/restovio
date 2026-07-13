@@ -93,10 +93,14 @@ export function RoomFilters() {
         <Label className="text-xs">Catégorie</Label>
         <Select value={category} onValueChange={(value) => setCategory(value ?? "all")}>
           <SelectTrigger className="w-full">
-            <SelectValue />
+            <SelectValue>
+              {(value: string) =>
+                value === "all" ? "Toutes les catégories" : (categoryLabels[value as keyof typeof categoryLabels] ?? value)
+              }
+            </SelectValue>
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Toutes</SelectItem>
+            <SelectItem value="all">Toutes les catégories</SelectItem>
             {Object.entries(categoryLabels).map(([value, label]) => (
               <SelectItem key={value} value={value}>
                 {label}
