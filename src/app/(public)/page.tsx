@@ -6,8 +6,7 @@ import {
   Wifi,
   Clock,
   CircleParking,
-  Car,
-  Clapperboard,
+  Flower2,
   Waves,
   UtensilsCrossed,
   Sparkles,
@@ -23,6 +22,7 @@ import { BookingSearchWidget } from "@/components/features/home/booking-search-w
 import { GalleryLightbox } from "@/components/features/home/gallery-lightbox";
 import { getFeaturedRooms } from "@/lib/data/rooms";
 import { getTestimonials } from "@/lib/data/testimonials";
+import { formatMonthYear } from "@/lib/format";
 
 // Contenu peu volatile (chambres en vedette, témoignages) : revalidation périodique
 // plutôt que du contenu statique figé au build, pour éviter les données obsolètes.
@@ -63,9 +63,9 @@ const services = [
     description: "Une cuisine italienne raffinée et une table réservable vue piscine.",
   },
   {
-    icon: Clapperboard,
-    title: "Salle de cinéma",
-    description: "Séance ouverte à tous les clients chaque vendredi soir.",
+    icon: Flower2,
+    title: "Bellavita Spa",
+    description: "Un espace bien-être pensé pour la détente, entre soins et moments de calme.",
   },
   {
     icon: Wifi,
@@ -79,13 +79,8 @@ const services = [
   },
   {
     icon: Clock,
-    title: "Réception 24h/24",
-    description: "Une équipe disponible à toute heure pour vous accueillir.",
-  },
-  {
-    icon: Car,
-    title: "Chauffeur pour vos sorties",
-    description: "Disponible pour vos excursions ; tarif négocié directement sans véhicule personnel.",
+    title: "Réception",
+    description: "Une équipe attentive pour vous accueillir tous les jours de 7h00 à 22h00.",
   },
 ];
 
@@ -265,25 +260,47 @@ export default async function HomePage() {
             <h2 className="mt-2 font-heading text-3xl font-medium">Ce que disent nos hôtes</h2>
           </div>
           <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {testimonials.map((testimonial) => (
-              <Card key={testimonial.id} className="border-border/60">
-                <CardContent className="pt-6">
-                  <div className="flex gap-0.5 text-gold">
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <Star
-                        key={i}
-                        className="h-4 w-4"
-                        fill={i < testimonial.rating ? "currentColor" : "none"}
-                      />
-                    ))}
-                  </div>
-                  <p className="mt-3 text-sm text-muted-foreground">
-                    &ldquo;{testimonial.content}&rdquo;
-                  </p>
-                  <p className="mt-4 font-heading text-sm font-medium">{testimonial.authorName}</p>
-                </CardContent>
-              </Card>
-            ))}
+            {testimonials.map((testimonial) => {
+              const [tripType, message] = testimonial.content.includes("||")
+                ? testimonial.content.split("||")
+                : [null, testimonial.content];
+              const initial = testimonial.authorName.charAt(0).toUpperCase();
+
+              return (
+                <Card key={testimonial.id} className="border-border/60">
+                  <CardContent className="pt-6">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-olive/10 font-heading text-sm font-medium text-olive">
+                        {initial}
+                      </div>
+                      <div>
+                        <p className="font-heading text-sm font-medium">{testimonial.authorName}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {formatMonthYear(testimonial.createdAt)}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="mt-4 flex items-center justify-between gap-2">
+                      <div className="flex gap-0.5 text-gold">
+                        {Array.from({ length: 5 }).map((_, i) => (
+                          <Star
+                            key={i}
+                            className="h-4 w-4"
+                            fill={i < testimonial.rating ? "currentColor" : "none"}
+                          />
+                        ))}
+                      </div>
+                      {tripType && (
+                        <span className="rounded-full bg-secondary px-2.5 py-1 text-xs font-medium text-foreground/80">
+                          {tripType}
+                        </span>
+                      )}
+                    </div>
+                    <p className="mt-3 text-sm text-muted-foreground">&ldquo;{message}&rdquo;</p>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         </section>
       )}

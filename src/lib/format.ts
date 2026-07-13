@@ -1,3 +1,8 @@
+export function formatMonthYear(date: Date) {
+  const formatted = new Intl.DateTimeFormat("fr-FR", { month: "long", year: "numeric" }).format(date);
+  return formatted.charAt(0).toUpperCase() + formatted.slice(1);
+}
+
 export function formatPrice(cents: number) {
   return (cents / 100).toLocaleString("fr-FR", {
     style: "currency",

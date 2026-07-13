@@ -50,12 +50,19 @@ export default function AProposPage() {
       </section>
 
       <section className="mx-auto max-w-3xl px-4 py-16">
-        <p className="text-lg text-muted-foreground">
-          Restovio est un établissement hôtelier situé au cœur de Florence, à quelques pas
+        <p className="text-xs font-medium tracking-[0.2em] text-olive uppercase">Depuis nos débuts</p>
+        <h2 className="mt-2 font-heading text-3xl font-medium">Notre histoire</h2>
+        <p className="mt-4 text-lg text-muted-foreground">
+          Restovio est né de la restauration d&apos;une ancienne demeure florentine du
+          quartier de l&apos;Oltrarno, rachetée à l&apos;abandon et transformée en hôtel
+          boutique. Ses volumes d&apos;origine, ses sols en terre cuite et ses poutres
+          apparentes ont été conservés, puis mariés à un confort résolument contemporain.
+        </p>
+        <p className="mt-4 text-lg text-muted-foreground">
+          Restovio est un établissement situé au cœur de Florence, à quelques pas
           du Ponte Vecchio, où chaque détail est pensé pour rendre votre séjour aussi
-          agréable que mémorable. Depuis notre ouverture, nous accueillons voyageurs
-          d&apos;affaires et touristes dans un cadre élégant inspiré des plus belles
-          maisons italiennes.
+          agréable que mémorable. Nous accueillons voyageurs d&apos;affaires et touristes
+          dans un cadre élégant inspiré des plus belles maisons italiennes.
         </p>
         <p className="mt-4 text-lg text-muted-foreground">
           Notre équipe s&apos;engage à offrir un service attentif et personnalisé, du
@@ -115,8 +122,7 @@ export default function AProposPage() {
             </li>
             <li>
               <span className="font-medium text-foreground">Sorties : </span>
-              un chauffeur est disponible pour vos excursions ; sans véhicule personnel, le
-              tarif se négocie directement avec lui.
+              service de chauffeur disponible sur demande auprès de la réception.
             </li>
             <li>
               <span className="font-medium text-foreground">Restaurant : </span>
