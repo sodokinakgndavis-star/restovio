@@ -110,7 +110,11 @@ export function TableReservationForm() {
         <Textarea id="comment" rows={3} placeholder="Allergies, occasion particulière…" {...register("comment")} />
       </div>
 
-      <Button type="submit" disabled={isSubmitting} className="w-full">
+      <Button
+        type="submit"
+        disabled={isSubmitting}
+        className="w-full bg-olive text-olive-foreground hover:bg-olive/85"
+      >
         {isSubmitting
           ? "Réservation en cours…"
           : status === "authenticated"

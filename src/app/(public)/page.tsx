@@ -20,6 +20,7 @@ import { RoomCard } from "@/components/features/rooms/room-card";
 import { ContactForm } from "@/components/features/home/contact-form";
 import { FadeIn } from "@/components/features/home/fade-in";
 import { BookingSearchWidget } from "@/components/features/home/booking-search-widget";
+import { GalleryLightbox } from "@/components/features/home/gallery-lightbox";
 import { getFeaturedRooms } from "@/lib/data/rooms";
 import { getTestimonials } from "@/lib/data/testimonials";
 
@@ -89,10 +90,11 @@ const services = [
 ];
 
 const galleryImages = [
-  "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800",
+  "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1200",
   "https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=800",
   "https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=800",
-  "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800",
+  "https://images.unsplash.com/photo-1769490315508-4fe59170e879?w=800",
+  "https://images.unsplash.com/photo-1763992108708-59021431508f?w=800",
 ];
 
 export default async function HomePage() {
@@ -199,31 +201,34 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* Bienvenue */}
+      <section className="mx-auto max-w-2xl px-4 py-20 text-center">
+        <p className="text-xs font-medium tracking-[0.2em] text-olive uppercase">
+          L&apos;établissement
+        </p>
+        <h2 className="mt-2 font-heading text-3xl font-medium">Bienvenue chez Restovio</h2>
+        <p className="mt-4 text-muted-foreground">
+          Au cœur de Florence, à quelques pas du Ponte Vecchio, Restovio vous accueille dans
+          un cadre élégant inspiré des plus belles maisons italiennes. Que vous voyagiez pour
+          affaires ou pour le plaisir, notre équipe met tout en œuvre pour rendre votre
+          séjour mémorable.
+        </p>
+        <Button
+          className="mt-6 bg-olive text-olive-foreground hover:bg-olive/85"
+          render={<Link href="/a-propos" />}
+        >
+          Découvrir Restovio
+        </Button>
+      </section>
+
       {/* Galerie */}
-      <section className="mx-auto max-w-6xl px-4 py-20">
-        <div className="grid gap-10 md:grid-cols-2 md:items-center">
-          <div>
-            <p className="text-xs font-medium tracking-[0.2em] text-olive uppercase">
-              L'établissement
-            </p>
-            <h2 className="mt-2 font-heading text-3xl font-medium">Bienvenue chez Restovio</h2>
-            <p className="mt-4 text-muted-foreground">
-              Au cœur de Florence, à quelques pas du Ponte Vecchio, Restovio vous accueille
-              dans un cadre élégant inspiré des plus belles maisons italiennes. Que vous
-              voyagiez pour affaires ou pour le plaisir, notre équipe met tout en œuvre pour
-              rendre votre séjour mémorable.
-            </p>
-            <Button className="mt-6 bg-olive text-olive-foreground hover:bg-olive/85" render={<Link href="/a-propos" />}>
-              Découvrir Restovio
-            </Button>
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            {galleryImages.map((src) => (
-              <div key={src} className="relative aspect-square overflow-hidden rounded-lg">
-                <Image src={src} alt="Photo de l'hôtel" fill className="object-cover" />
-              </div>
-            ))}
-          </div>
+      <section className="mx-auto max-w-6xl px-4 pb-20">
+        <div className="text-center">
+          <p className="text-xs font-medium tracking-[0.2em] text-olive uppercase">Galerie</p>
+          <h2 className="mt-2 font-heading text-3xl font-medium">L&apos;esprit Restovio</h2>
+        </div>
+        <div className="mt-10">
+          <GalleryLightbox images={galleryImages} />
         </div>
       </section>
 
