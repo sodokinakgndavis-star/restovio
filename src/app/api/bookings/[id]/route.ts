@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { computeRefundDueDate } from "@/lib/data/bookings";
 import { isRoomAvailable } from "@/lib/data/rooms";
+import { sendBookingValidatedEmail, sendBookingRefusedEmail } from "@/lib/email";
 
 const patchSchema = z.union([
   z.object({ status: z.enum(["CONFIRMED", "REFUSED", "CANCELLED"]) }),
@@ -17,7 +18,13 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
   }
 
   const { id } = await params;
-  const booking = await prisma.booking.findUnique({ where: { id } });
+  const booking = await prisma.booking.findUnique({
+    where: { id },
+    include: {
+      room: { select: { name: true } },
+      user: { select: { name: true, email: true } },
+    },
+  });
   if (!booking) {
     return NextResponse.json({ error: "Réservation introuvable." }, { status: 404 });
   }
@@ -120,6 +127,18 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
       }),
     },
   });
+
+  // Notification e-mail au client : sendSafely() n'échoue jamais (erreurs interceptées
+  // et loguées), on peut donc l'attendre sans risquer de faire échouer la validation/le
+  // refus si Resend est indisponible (section 4 du cahier des charges), tout en évitant
+  // qu'un environnement serverless coupe l'exécution avant la fin de l'envoi.
+  if (isAdmin && parsed.data.status === "CONFIRMED") {
+    const origin = new URL(request.url).origin;
+    await sendBookingValidatedEmail({ ...booking, ...updated }, origin);
+  } else if (isAdmin && parsed.data.status === "REFUSED") {
+    const origin = new URL(request.url).origin;
+    await sendBookingRefusedEmail({ ...booking, ...updated }, origin);
+  }
 
   return NextResponse.json({ booking: updated });
 }
