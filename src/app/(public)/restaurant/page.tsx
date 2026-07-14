@@ -104,6 +104,15 @@ export default async function RestaurantPage() {
                 piscine, chaque soir de 19h à 22h. La confirmation vous est envoyée dans
                 votre espace client.
               </p>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Pour un groupe ou un événement privé, contactez-nous directement :{" "}
+                <a
+                  href="mailto:restovio16@gmail.com"
+                  className="text-foreground underline underline-offset-4 hover:text-olive"
+                >
+                  restovio16@gmail.com
+                </a>
+              </p>
               <div className="mt-8 rounded-xl border border-border/60 bg-card p-6 shadow-sm">
                 <TableReservationForm />
               </div>
