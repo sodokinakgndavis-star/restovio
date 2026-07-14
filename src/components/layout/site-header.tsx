@@ -5,8 +5,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
-import { Menu } from "lucide-react";
+import { ChevronDown, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Sheet,
   SheetContent,
@@ -101,42 +107,30 @@ export function SiteHeader() {
 
         <div className="hidden items-center gap-1.5 xl:flex">
           {status === "authenticated" && session.user ? (
-            <>
-              {session.user.role === "ADMIN" && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className={ghostBtn}
-                  render={<Link href="/admin" />}
-                >
-                  Administration
-                </Button>
-              )}
-              <Button
-                variant="ghost"
-                size="sm"
-                className={ghostBtn}
-                render={<Link href="/mon-compte" />}
-              >
-                Mon compte
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className={ghostBtn}
-                render={<Link href="/mon-compte/reservations" />}
-              >
-                Mes réservations
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className={ghostBtn}
-                onClick={handleSignOut}
-              >
-                Déconnexion
-              </Button>
-            </>
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                render={
+                  <Button variant="ghost" size="sm" className={ghostBtn}>
+                    Mon compte
+                    <ChevronDown className="h-3.5 w-3.5" />
+                  </Button>
+                }
+              />
+              <DropdownMenuContent align="end">
+                {session.user.role === "ADMIN" && (
+                  <DropdownMenuItem render={<Link href="/admin" />}>
+                    Administration
+                  </DropdownMenuItem>
+                )}
+                <DropdownMenuItem render={<Link href="/mon-compte" />}>
+                  Mon compte
+                </DropdownMenuItem>
+                <DropdownMenuItem render={<Link href="/mon-compte/reservations" />}>
+                  Mes réservations
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleSignOut}>Déconnexion</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           ) : status === "loading" ? null : (
             <>
               <Button variant="ghost" size="sm" className={ghostBtn} render={<Link href="/connexion" />}>
