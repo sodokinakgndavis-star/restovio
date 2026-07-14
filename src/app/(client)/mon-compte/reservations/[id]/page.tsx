@@ -5,6 +5,7 @@ import { ArrowLeft } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { getBookingById } from "@/lib/data/bookings";
 import { BookingStatusBadge } from "@/components/features/bookings/booking-status-badge";
+import { BookingTimeline } from "@/components/features/bookings/booking-timeline";
 import { CancelBookingButton } from "@/components/features/bookings/cancel-booking-button";
 import { PayBookingButton } from "@/components/features/bookings/pay-booking-button";
 import { formatPrice } from "@/lib/format";
@@ -18,11 +19,18 @@ function canCancel(status: string, checkIn: Date) {
   );
 }
 
-export default async function BookingDetailPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function BookingDetailPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ payment?: string }>;
+}) {
   const session = await auth();
   if (!session?.user) redirect("/connexion");
 
   const { id } = await params;
+  const { payment } = await searchParams;
   const booking = await getBookingById(id);
 
   // Contrôle de propriété : un client ne peut consulter que ses propres réservations.
@@ -37,6 +45,18 @@ export default async function BookingDetailPage({ params }: { params: Promise<{ 
         <ArrowLeft className="h-4 w-4" /> Retour à mes réservations
       </Link>
 
+      {payment === "success" && booking.status === "PAID" && (
+        <div className="mt-4 rounded-md bg-green-50 p-3 text-sm text-green-700 dark:bg-green-950 dark:text-green-400">
+          Paiement reçu, merci ! Votre réservation est confirmée et payée.
+        </div>
+      )}
+      {payment === "cancelled" && (
+        <div className="mt-4 rounded-md bg-amber-50 p-3 text-sm text-amber-700 dark:bg-amber-950 dark:text-amber-400">
+          Paiement annulé. Vous pouvez réessayer à tout moment tant que la réservation est
+          validée.
+        </div>
+      )}
+
       <div className="mt-4 flex flex-col gap-6 rounded-lg border bg-background p-6 sm:flex-row">
         <div className="relative h-40 w-full shrink-0 overflow-hidden rounded sm:w-56">
           {booking.room.images[0] && (
@@ -49,6 +69,8 @@ export default async function BookingDetailPage({ params }: { params: Promise<{ 
             <h2 className="text-xl font-semibold">{booking.room.name}</h2>
             <BookingStatusBadge status={booking.status} />
           </div>
+
+          <BookingTimeline status={booking.status} />
 
           <dl className="grid grid-cols-2 gap-3 text-sm">
             <div>
