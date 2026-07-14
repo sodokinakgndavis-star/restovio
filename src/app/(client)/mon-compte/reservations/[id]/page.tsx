@@ -6,6 +6,7 @@ import { auth } from "@/lib/auth";
 import { getBookingById } from "@/lib/data/bookings";
 import { BookingStatusBadge } from "@/components/features/bookings/booking-status-badge";
 import { CancelBookingButton } from "@/components/features/bookings/cancel-booking-button";
+import { PayBookingButton } from "@/components/features/bookings/pay-booking-button";
 import { formatPrice } from "@/lib/format";
 
 export const metadata = { title: "Détail de la réservation" };
@@ -102,11 +103,12 @@ export default async function BookingDetailPage({ params }: { params: Promise<{ 
             </div>
           )}
 
-          {canCancel(booking.status, booking.checkIn) && (
-            <div className="pt-2">
+          <div className="flex flex-wrap items-center gap-2 pt-2">
+            {booking.status === "CONFIRMED" && <PayBookingButton bookingId={booking.id} />}
+            {canCancel(booking.status, booking.checkIn) && (
               <CancelBookingButton bookingId={booking.id} />
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </div>
