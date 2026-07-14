@@ -60,8 +60,8 @@ export async function POST(request: Request) {
   // longue durée (-30 % à partir de 30 nuits).
   const nights = computeNights(checkIn, checkOut);
   const { total: totalPrice } = computeTotalPrice(room.price, nights);
-  // Acompte de 50 % dû à la réservation (paiement simulé, hors plateforme) ; le solde
-  // est réglé sur place à l'arrivée.
+  // Aucun paiement à la création : la demande part en attente, le paiement (100 % du
+  // montant, via Stripe) n'intervient qu'après validation par l'admin.
   const depositAmount = computeDeposit(totalPrice);
 
   const booking = await prisma.booking.create({

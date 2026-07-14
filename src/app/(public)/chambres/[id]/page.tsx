@@ -77,7 +77,8 @@ export default async function RoomDetailPage({ params }: { params: Promise<{ id:
                 <h3 className="font-heading text-sm font-medium">Conditions</h3>
               </div>
               <p className="mt-2 text-sm text-muted-foreground">
-                Acompte de 50 % à la réservation, solde réglé sur place. Voir notre{" "}
+                Paiement intégral, en ligne et sécurisé, une fois votre demande validée par
+                notre équipe. Voir notre{" "}
                 <Link href="/politique-annulation" className="underline underline-offset-4 hover:text-foreground">
                   politique d&apos;annulation
                 </Link>

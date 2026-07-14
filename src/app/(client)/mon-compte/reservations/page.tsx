@@ -11,7 +11,10 @@ import { formatPrice } from "@/lib/format";
 export const metadata = { title: "Mes réservations" };
 
 function canCancel(status: string, checkIn: Date) {
-  return (status === "PENDING" || status === "CONFIRMED") && new Date(checkIn) >= new Date();
+  return (
+    (status === "PENDING" || status === "CONFIRMED" || status === "PAID") &&
+    new Date(checkIn) >= new Date()
+  );
 }
 
 export default async function MesReservationsPage() {
@@ -57,17 +60,18 @@ export default async function MesReservationsPage() {
             </p>
             <p className="mt-1 text-sm font-medium">{formatPrice(booking.totalPrice)}</p>
             <p className="text-xs text-muted-foreground">
-              Acompte {formatPrice(booking.depositAmount)} · Solde sur place{" "}
-              {formatPrice(booking.totalPrice - booking.depositAmount)}
+              {booking.status === "PAID" && booking.paidAt
+                ? `Payé le ${new Date(booking.paidAt).toLocaleDateString("fr-FR")}`
+                : "Non payé"}
             </p>
             {booking.status === "CANCELLED" && booking.refundStatus === "PENDING" && (
               <p className="mt-1 text-xs text-amber-600 dark:text-amber-400">
-                Remboursement de l&apos;acompte prévu avant le{" "}
+                Remboursement prévu avant le{" "}
                 {booking.refundDueAt && new Date(booking.refundDueAt).toLocaleString("fr-FR")}
               </p>
             )}
             {booking.status === "CANCELLED" && booking.refundStatus === "REFUNDED" && (
-              <p className="mt-1 text-xs text-green-600 dark:text-green-400">Acompte remboursé</p>
+              <p className="mt-1 text-xs text-green-600 dark:text-green-400">Montant remboursé</p>
             )}
           </div>
 

@@ -37,7 +37,7 @@ export async function getDashboardStats() {
     prisma.room.count(),
     prisma.booking.findMany({
       where: {
-        status: { in: ["PENDING", "CONFIRMED"] },
+        status: { in: ["PENDING", "CONFIRMED", "PAID"] },
         checkIn: { lte: now },
         checkOut: { gt: now },
       },
@@ -47,8 +47,11 @@ export async function getDashboardStats() {
     prisma.booking.count({ where: { createdAt: { gte: todayStart, lte: todayEnd } } }),
     prisma.booking.count({ where: { createdAt: { gte: monthStart, lte: monthEnd } } }),
     prisma.user.count({ where: { role: "CLIENT" } }),
+    // Le chiffre d'affaires ne compte que les réservations réellement payées (PAID) :
+    // CONFIRMED signifie seulement que l'admin a validé la demande, pas que l'argent a
+    // été perçu (le paiement Stripe intervient après validation).
     prisma.booking.aggregate({
-      where: { status: "CONFIRMED" },
+      where: { status: "PAID" },
       _sum: { totalPrice: true },
     }),
     prisma.booking.findMany({
@@ -65,9 +68,9 @@ export async function getDashboardStats() {
 
   // Agrégation des 30 derniers jours pour le graphique réservations/revenus.
   const rangeStart = subDays(now, 29);
-  const confirmedBookingsInRange = await prisma.booking.findMany({
+  const paidBookingsInRange = await prisma.booking.findMany({
     where: {
-      status: "CONFIRMED",
+      status: "PAID",
       createdAt: { gte: startOfDay(rangeStart) },
     },
     select: { createdAt: true, totalPrice: true },
@@ -78,7 +81,7 @@ export async function getDashboardStats() {
     const day = subDays(now, 29 - i);
     dailyMap.set(format(day, "yyyy-MM-dd"), { revenue: 0, count: 0 });
   }
-  for (const booking of confirmedBookingsInRange) {
+  for (const booking of paidBookingsInRange) {
     const key = format(booking.createdAt, "yyyy-MM-dd");
     const entry = dailyMap.get(key);
     if (entry) {

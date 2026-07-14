@@ -11,7 +11,10 @@ import { formatPrice } from "@/lib/format";
 export const metadata = { title: "Détail de la réservation" };
 
 function canCancel(status: string, checkIn: Date) {
-  return (status === "PENDING" || status === "CONFIRMED") && new Date(checkIn) >= new Date();
+  return (
+    (status === "PENDING" || status === "CONFIRMED" || status === "PAID") &&
+    new Date(checkIn) >= new Date()
+  );
 }
 
 export default async function BookingDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -64,12 +67,12 @@ export default async function BookingDetailPage({ params }: { params: Promise<{ 
               <dd className="font-semibold">{formatPrice(booking.totalPrice)}</dd>
             </div>
             <div>
-              <dt className="text-muted-foreground">Acompte (50 %)</dt>
-              <dd>{formatPrice(booking.depositAmount)}</dd>
-            </div>
-            <div>
-              <dt className="text-muted-foreground">Solde à régler sur place</dt>
-              <dd>{formatPrice(booking.totalPrice - booking.depositAmount)}</dd>
+              <dt className="text-muted-foreground">Paiement</dt>
+              <dd>
+                {booking.status === "PAID" && booking.paidAt
+                  ? `Payé le ${new Date(booking.paidAt).toLocaleString("fr-FR")}`
+                  : "Non payé"}
+              </dd>
             </div>
           </dl>
 
@@ -90,12 +93,11 @@ export default async function BookingDetailPage({ params }: { params: Promise<{ 
             >
               {booking.refundStatus === "PENDING" ? (
                 <>
-                  Remboursement de l&apos;acompte ({formatPrice(booking.depositAmount)}) prévu
-                  avant le{" "}
+                  Remboursement de {formatPrice(booking.totalPrice)} prévu avant le{" "}
                   {booking.refundDueAt && new Date(booking.refundDueAt).toLocaleString("fr-FR")}.
                 </>
               ) : (
-                <>Acompte de {formatPrice(booking.depositAmount)} remboursé.</>
+                <>Montant de {formatPrice(booking.totalPrice)} remboursé.</>
               )}
             </div>
           )}
