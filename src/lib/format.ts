@@ -21,8 +21,10 @@ export const categoryLabels: Record<string, string> = {
 
 export const bookingStatusLabels: Record<string, string> = {
   PENDING: "En attente",
-  CONFIRMED: "Confirmée",
+  CONFIRMED: "Validée",
+  REFUSED: "Refusée",
   CANCELLED: "Annulée",
+  PAID: "Payée",
 };
 
 export const refundStatusLabels: Record<string, string> = {

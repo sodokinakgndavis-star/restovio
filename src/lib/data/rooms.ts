@@ -121,7 +121,7 @@ export async function isRoomAvailable(
   const conflict = await prisma.booking.findFirst({
     where: {
       roomId,
-      status: { in: ["PENDING", "CONFIRMED"] },
+      status: { in: ["PENDING", "CONFIRMED", "PAID"] },
       checkIn: { lt: checkOut },
       checkOut: { gt: checkIn },
       ...(excludeBookingId ? { id: { not: excludeBookingId } } : {}),
