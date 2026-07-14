@@ -5,20 +5,32 @@ import { ArrowLeft } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { getBookingById } from "@/lib/data/bookings";
 import { BookingStatusBadge } from "@/components/features/bookings/booking-status-badge";
+import { BookingTimeline } from "@/components/features/bookings/booking-timeline";
 import { CancelBookingButton } from "@/components/features/bookings/cancel-booking-button";
+import { PayBookingButton } from "@/components/features/bookings/pay-booking-button";
 import { formatPrice } from "@/lib/format";
 
 export const metadata = { title: "Détail de la réservation" };
 
 function canCancel(status: string, checkIn: Date) {
-  return (status === "PENDING" || status === "CONFIRMED") && new Date(checkIn) >= new Date();
+  return (
+    (status === "PENDING" || status === "CONFIRMED" || status === "PAID") &&
+    new Date(checkIn) >= new Date()
+  );
 }
 
-export default async function BookingDetailPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function BookingDetailPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ payment?: string }>;
+}) {
   const session = await auth();
   if (!session?.user) redirect("/connexion");
 
   const { id } = await params;
+  const { payment } = await searchParams;
   const booking = await getBookingById(id);
 
   // Contrôle de propriété : un client ne peut consulter que ses propres réservations.
@@ -33,6 +45,18 @@ export default async function BookingDetailPage({ params }: { params: Promise<{ 
         <ArrowLeft className="h-4 w-4" /> Retour à mes réservations
       </Link>
 
+      {payment === "success" && booking.status === "PAID" && (
+        <div className="mt-4 rounded-md bg-green-50 p-3 text-sm text-green-700 dark:bg-green-950 dark:text-green-400">
+          Paiement reçu, merci ! Votre réservation est confirmée et payée.
+        </div>
+      )}
+      {payment === "cancelled" && (
+        <div className="mt-4 rounded-md bg-amber-50 p-3 text-sm text-amber-700 dark:bg-amber-950 dark:text-amber-400">
+          Paiement annulé. Vous pouvez réessayer à tout moment tant que la réservation est
+          validée.
+        </div>
+      )}
+
       <div className="mt-4 flex flex-col gap-6 rounded-lg border bg-background p-6 sm:flex-row">
         <div className="relative h-40 w-full shrink-0 overflow-hidden rounded sm:w-56">
           {booking.room.images[0] && (
@@ -45,6 +69,8 @@ export default async function BookingDetailPage({ params }: { params: Promise<{ 
             <h2 className="text-xl font-semibold">{booking.room.name}</h2>
             <BookingStatusBadge status={booking.status} />
           </div>
+
+          <BookingTimeline status={booking.status} />
 
           <dl className="grid grid-cols-2 gap-3 text-sm">
             <div>
@@ -64,12 +90,12 @@ export default async function BookingDetailPage({ params }: { params: Promise<{ 
               <dd className="font-semibold">{formatPrice(booking.totalPrice)}</dd>
             </div>
             <div>
-              <dt className="text-muted-foreground">Acompte (50 %)</dt>
-              <dd>{formatPrice(booking.depositAmount)}</dd>
-            </div>
-            <div>
-              <dt className="text-muted-foreground">Solde à régler sur place</dt>
-              <dd>{formatPrice(booking.totalPrice - booking.depositAmount)}</dd>
+              <dt className="text-muted-foreground">Paiement</dt>
+              <dd>
+                {booking.status === "PAID" && booking.paidAt
+                  ? `Payé le ${new Date(booking.paidAt).toLocaleString("fr-FR")}`
+                  : "Non payé"}
+              </dd>
             </div>
           </dl>
 
@@ -90,21 +116,21 @@ export default async function BookingDetailPage({ params }: { params: Promise<{ 
             >
               {booking.refundStatus === "PENDING" ? (
                 <>
-                  Remboursement de l&apos;acompte ({formatPrice(booking.depositAmount)}) prévu
-                  avant le{" "}
+                  Remboursement de {formatPrice(booking.totalPrice)} prévu avant le{" "}
                   {booking.refundDueAt && new Date(booking.refundDueAt).toLocaleString("fr-FR")}.
                 </>
               ) : (
-                <>Acompte de {formatPrice(booking.depositAmount)} remboursé.</>
+                <>Montant de {formatPrice(booking.totalPrice)} remboursé.</>
               )}
             </div>
           )}
 
-          {canCancel(booking.status, booking.checkIn) && (
-            <div className="pt-2">
+          <div className="flex flex-wrap items-center gap-2 pt-2">
+            {booking.status === "CONFIRMED" && <PayBookingButton bookingId={booking.id} />}
+            {canCancel(booking.status, booking.checkIn) && (
               <CancelBookingButton bookingId={booking.id} />
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </div>

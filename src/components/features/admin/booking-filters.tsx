@@ -60,7 +60,9 @@ export function BookingFilters({
         }}
       >
         <SelectTrigger className="sm:w-48">
-          <SelectValue />
+          <SelectValue>
+            {(value: string) => (value === "all" ? "Tous les statuts" : (bookingStatusLabels[value] ?? value))}
+          </SelectValue>
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">Tous les statuts</SelectItem>

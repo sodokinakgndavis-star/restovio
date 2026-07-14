@@ -47,7 +47,7 @@ export default async function AdminDashboardPage() {
             </div>
             <div>
               <p className="text-2xl font-bold">{formatPrice(stats.simulatedRevenue)}</p>
-              <p className="text-sm text-muted-foreground">Chiffre d&apos;affaires simulé</p>
+              <p className="text-sm text-muted-foreground">Chiffre d&apos;affaires (payé)</p>
             </div>
           </CardContent>
         </Card>

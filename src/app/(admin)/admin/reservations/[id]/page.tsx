@@ -68,12 +68,12 @@ export default async function AdminBookingDetailPage({
               <dd className="font-semibold">{formatPrice(booking.totalPrice)}</dd>
             </div>
             <div>
-              <dt className="text-muted-foreground">Acompte (50 %)</dt>
-              <dd>{formatPrice(booking.depositAmount)}</dd>
-            </div>
-            <div>
-              <dt className="text-muted-foreground">Solde sur place</dt>
-              <dd>{formatPrice(booking.totalPrice - booking.depositAmount)}</dd>
+              <dt className="text-muted-foreground">Paiement</dt>
+              <dd>
+                {booking.status === "PAID" && booking.paidAt
+                  ? `Payé le ${new Date(booking.paidAt).toLocaleString("fr-FR")}`
+                  : "Non payé"}
+              </dd>
             </div>
             <div>
               <dt className="text-muted-foreground">Créée le</dt>

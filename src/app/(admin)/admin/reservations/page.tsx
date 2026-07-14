@@ -18,7 +18,17 @@ import type { BookingStatus } from "@prisma/client";
 export const metadata = { title: "Gestion des réservations" };
 export const dynamic = "force-dynamic";
 
-const VALID_STATUSES = ["PENDING", "CONFIRMED", "CANCELLED"];
+const VALID_STATUSES = ["PENDING", "CONFIRMED", "REFUSED", "CANCELLED", "PAID"];
+
+// Onglets rapides du tableau de bord admin (section 8 du cahier des charges
+// d'évolution) : Toutes, En attente, Validées, Refusées, Payées.
+const STATUS_TABS: { label: string; status?: BookingStatus }[] = [
+  { label: "Toutes" },
+  { label: "En attente", status: "PENDING" },
+  { label: "Validées", status: "CONFIRMED" },
+  { label: "Refusées", status: "REFUSED" },
+  { label: "Payées", status: "PAID" },
+];
 
 export default async function AdminBookingsPage({
   searchParams,
@@ -43,7 +53,29 @@ export default async function AdminBookingsPage({
       <h1 className="text-2xl font-bold">Réservations</h1>
       <p className="text-sm text-muted-foreground">{total} réservation(s)</p>
 
-      <div className="mt-6">
+      <div className="mt-5 flex flex-wrap gap-1.5">
+        {STATUS_TABS.map((tab) => {
+          const isActive = status === tab.status;
+          const href = tab.status
+            ? `/admin/reservations?status=${tab.status}`
+            : "/admin/reservations";
+          return (
+            <Link
+              key={tab.label}
+              href={href}
+              className={`rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${
+                isActive
+                  ? "bg-olive text-olive-foreground"
+                  : "bg-muted text-muted-foreground hover:bg-muted/70 hover:text-foreground"
+              }`}
+            >
+              {tab.label}
+            </Link>
+          );
+        })}
+      </div>
+
+      <div className="mt-4">
         <BookingFilters />
       </div>
 

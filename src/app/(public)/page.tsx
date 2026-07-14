@@ -42,7 +42,7 @@ const highlights = [
   {
     icon: HeartHandshake,
     title: "Une réservation sereine",
-    description: "Disponibilité vérifiée en temps réel et acompte de 50 % seulement.",
+    description: "Demande de réservation validée par notre équipe, paiement sécurisé en ligne.",
   },
 ];
 

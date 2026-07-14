@@ -8,11 +8,11 @@ export default function PolitiqueAnnulationPage() {
 
       <div className="mt-8 space-y-6 text-muted-foreground">
         <section>
-          <h2 className="font-heading text-lg font-medium text-foreground">Acompte</h2>
+          <h2 className="font-heading text-lg font-medium text-foreground">Demande et paiement</h2>
           <p className="mt-2">
-            Chaque réservation de chambre nécessite un acompte de 50 % du montant total,
-            réglé au moment de la réservation. Le solde est réglé directement sur place, à
-            votre arrivée.
+            Chaque réservation de chambre commence par une demande, sans paiement. Une fois
+            validée par notre équipe (généralement sous 24 heures), un e-mail vous invite à
+            régler le montant total en une seule fois, en ligne et de façon sécurisée.
           </p>
         </section>
 
@@ -28,9 +28,10 @@ export default function PolitiqueAnnulationPage() {
         <section>
           <h2 className="font-heading text-lg font-medium text-foreground">Remboursement</h2>
           <p className="mt-2">
-            En cas d&apos;annulation, l&apos;acompte versé vous est intégralement remboursé
-            sous 24 heures. Le statut du remboursement est visible à tout moment dans votre
-            espace client, dans le détail de la réservation concernée.
+            En cas d&apos;annulation d&apos;une réservation déjà payée, le montant versé
+            vous est intégralement remboursé sous 24 heures. Le statut du remboursement est
+            visible à tout moment dans votre espace client, dans le détail de la réservation
+            concernée.
           </p>
         </section>
 

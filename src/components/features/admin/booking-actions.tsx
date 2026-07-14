@@ -29,7 +29,7 @@ export function BookingActions({
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
-  function updateStatus(newStatus: "CONFIRMED" | "CANCELLED") {
+  function updateStatus(newStatus: "CONFIRMED" | "REFUSED" | "CANCELLED") {
     startTransition(async () => {
       const res = await fetch(`/api/bookings/${bookingId}`, {
         method: "PATCH",
@@ -43,7 +43,12 @@ export function BookingActions({
         return;
       }
 
-      toast.success(newStatus === "CONFIRMED" ? "Réservation confirmée." : "Réservation annulée.");
+      const messages: Record<typeof newStatus, string> = {
+        CONFIRMED: "Réservation validée.",
+        REFUSED: "Réservation refusée.",
+        CANCELLED: "Réservation annulée.",
+      };
+      toast.success(messages[newStatus]);
       router.refresh();
     });
   }
@@ -62,7 +67,7 @@ export function BookingActions({
         return;
       }
 
-      toast.success("Acompte marqué comme remboursé.");
+      toast.success("Paiement marqué comme remboursé.");
       router.refresh();
     });
   }
@@ -84,12 +89,23 @@ export function BookingActions({
 
   return (
     <div className="flex justify-end gap-1">
-      {status !== "CONFIRMED" && status !== "CANCELLED" && (
-        <Button variant="outline" size="sm" disabled={isPending} onClick={() => updateStatus("CONFIRMED")}>
-          Confirmer
-        </Button>
+      {status === "PENDING" && (
+        <>
+          <Button variant="outline" size="sm" disabled={isPending} onClick={() => updateStatus("CONFIRMED")}>
+            Valider
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            className="text-destructive"
+            disabled={isPending}
+            onClick={() => updateStatus("REFUSED")}
+          >
+            Refuser
+          </Button>
+        </>
       )}
-      {status !== "CANCELLED" && (
+      {(status === "CONFIRMED" || status === "PAID") && (
         <Button variant="outline" size="sm" disabled={isPending} onClick={() => updateStatus("CANCELLED")}>
           Annuler
         </Button>

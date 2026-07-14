@@ -4,17 +4,17 @@ const faqs = [
   {
     question: "Comment réserver une chambre ?",
     answer:
-      "Choisissez vos dates depuis le moteur de recherche en page d'accueil ou depuis le catalogue des chambres, sélectionnez une chambre disponible, puis connectez-vous ou créez un compte pour finaliser votre réservation.",
+      "Choisissez vos dates depuis le moteur de recherche en page d'accueil ou depuis le catalogue des chambres, sélectionnez une chambre disponible, puis connectez-vous ou créez un compte pour envoyer votre demande de réservation. Notre équipe la valide ensuite, généralement sous 24 heures.",
   },
   {
-    question: "Un acompte est-il demandé ?",
+    question: "Comment se déroule le paiement ?",
     answer:
-      "Oui, un acompte de 50 % du montant total est dû à la réservation. Le solde est réglé directement sur place, à votre arrivée.",
+      "Aucun paiement n'est demandé au moment de la demande. Une fois votre réservation validée par notre équipe, vous recevez un e-mail avec un lien de paiement sécurisé pour régler le montant total en une seule fois, avant votre séjour.",
   },
   {
     question: "Puis-je annuler ma réservation ?",
     answer:
-      "Oui, depuis votre espace client, tant que la date d'arrivée n'est pas passée. L'acompte versé vous est remboursé sous 24 heures.",
+      "Oui, depuis votre espace client, tant que la date d'arrivée n'est pas passée. Si vous aviez déjà réglé le paiement, le montant vous est remboursé sous 24 heures.",
   },
   {
     question: "Existe-t-il une réduction pour les longs séjours ?",

@@ -1,9 +1,10 @@
 // Fonctions de calcul pures (aucune dépendance serveur), utilisables aussi bien
 // côté client (estimation live) que côté serveur (source de vérité).
 
-// Politique de paiement simulée (aucune intégration de paiement réel, section 8 du
-// cahier des charges) : un acompte de 50 % est dû à la réservation, le solde sur place.
-export const DEPOSIT_RATIO = 0.5;
+// Le paiement (Stripe) n'intervient qu'après validation de la demande par l'admin, et
+// porte sur 100 % du montant : plus d'acompte partiel (évolution du système de
+// réservation — section 6 du cahier des charges).
+export const DEPOSIT_RATIO = 1;
 // Délai de remboursement annoncé en cas d'annulation.
 export const REFUND_WINDOW_HOURS = 24;
 // Remise séjour longue durée : -30 % à partir de 30 nuits consécutives.

@@ -41,8 +41,12 @@ depuis un tableau de bord dédié.
 - Micro-animations Framer Motion (section héro), transitions shadcn/ui.
 - Vérification de disponibilité en direct sur la fiche chambre, filtre par
   date des réservations côté admin, page de détail de réservation admin.
-- Acompte de 50 % à la réservation et suivi de remboursement sous 24h en
-  cas d'annulation (paiement simulé, hors plateforme).
+- Système de réservation avec validation admin : demande client → statut
+  "En attente" → validation ou refus par l'administrateur (avec
+  re-vérification des conflits de dates) → e-mail de notification (Resend)
+  → paiement intégral en ligne via Stripe (mode test) → statut "Payée".
+  Suivi de remboursement sous 24h en cas d'annulation d'une réservation
+  déjà payée.
 - Remise automatique de -30 % sur les séjours de 30 nuits ou plus.
 - Nouveaux services mis en avant : petit-déjeuner gratuit, véhicule/chauffeur
   pour les sorties (tarif négocié directement, hors plateforme), salle de
@@ -106,6 +110,16 @@ l'édition de chambres restent possibles mais l'ajout de nouvelles photos
 échouera (les chambres seedées utilisent des images Unsplash déjà en
 place).
 
+Les variables `STRIPE_*` (clés de test — voir
+[dashboard.stripe.com/test/apikeys](https://dashboard.stripe.com/test/apikeys))
+sont nécessaires pour le paiement des réservations validées ; `RESEND_API_KEY`
+pour les e-mails de validation/refus. En local, `STRIPE_WEBHOOK_SECRET` est
+fourni par `stripe listen --forward-to localhost:3401/api/webhooks/stripe`
+(Stripe CLI). Sans ces variables, la création/consultation de réservations
+reste fonctionnelle ; seuls le paiement et l'envoi d'e-mail échouent (de
+façon non bloquante pour l'e-mail, la réservation reste correctement
+validée/refusée).
+
 ## Comptes de démonstration
 
 Créés par le script de seed (`npx prisma db seed`) :
@@ -114,6 +128,10 @@ Créés par le script de seed (`npx prisma db seed`) :
 |---|---|---|
 | CLIENT | `client@restovio.app` | `Client1234!` |
 | ADMIN | `admin@restovio.app` | `Admin1234!` |
+
+Pour tester le paiement (Stripe en mode test) : carte `4242 4242 4242 4242`,
+date d'expiration future quelconque, CVC quelconque (ex. `123`). Aucun
+montant réel n'est débité.
 
 ## Déploiement
 
@@ -186,17 +204,31 @@ du prix).
   les 60 secondes (ISR) plutôt que rendue à chaque requête, ce contenu
   étant peu volatile ; la disponibilité des chambres et les réservations
   ne sont jamais mises en cache.
-- **Aucun paiement réel, aucun e-mail transactionnel réel** : conforme au
-  périmètre défini (section 8 du cahier des charges). Le chiffre d'affaires
-  du tableau de bord est simulé à partir des réservations confirmées.
-- **Acompte de 50 % et remboursement sous 24h (simulés)** : chaque réservation
-  calcule et stocke un acompte de 50 % du prix total (`depositAmount`), le
-  solde étant réglé sur place. En cas d'annulation, un statut de
-  remboursement (`refundStatus`) et une échéance à 24h (`refundDueAt`) sont
-  enregistrés ; l'administrateur peut marquer le remboursement comme
-  effectué une fois le virement réalisé hors plateforme. Aucun mouvement
-  d'argent réel n'a lieu sur le site (pas de Stripe ni d'autre PSP), en
-  cohérence avec le hors-périmètre paiement du cahier des charges.
+- **Paiement Stripe en mode test** : le paiement (100 % du montant, plus
+  d'acompte) n'intervient qu'après validation de la demande par l'admin,
+  via une Checkout Session Stripe. Le montant est calculé côté serveur à
+  partir de `booking.totalPrice` en base, jamais transmis par le client.
+  Le statut `PAID` n'est positionné que par le webhook Stripe
+  (`checkout.session.completed`, signature vérifiée) — aucune route
+  cliente ne peut le déclencher directement. Le mode test Stripe est
+  utilisé volontairement (établissement fictif, cf. mentions légales) :
+  aucune carte réelle n'est débitée, cartes de test uniquement
+  (`4242 4242 4242 4242`).
+- **E-mails transactionnels réels (Resend)** : notification envoyée au
+  client à la validation (résumé + lien de paiement) et au refus d'une
+  demande. L'envoi est non bloquant : un échec (ex. restriction du mode
+  sandbox Resend, qui limite l'envoi à l'adresse du compte tant qu'aucun
+  domaine n'est vérifié) est logué mais n'empêche jamais la mise à jour
+  du statut de la réservation.
+- **Remboursement sous 24h (simulé)** : uniquement pour une réservation
+  déjà payée. L'annulation positionne un statut de remboursement
+  (`refundStatus`) et une échéance à 24h (`refundDueAt`) ; l'administrateur
+  marque le remboursement comme effectué une fois le virement réalisé hors
+  plateforme (aucun remboursement Stripe automatisé — non demandé par le
+  cahier des charges d'évolution).
+- Le chiffre d'affaires du tableau de bord admin compte uniquement les
+  réservations au statut `PAID` (argent réellement perçu via Stripe), pas
+  les réservations simplement validées.
 - **Désactivation/suppression de compte** (Could Have) non implémentée,
   conformément à la stratégie de repli du cahier des charges en cas de
   contrainte de temps.

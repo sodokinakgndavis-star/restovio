@@ -13,7 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { bookingSchema, type BookingInput } from "@/lib/validators/booking";
 import { formatPrice } from "@/lib/format";
-import { computeTotalPrice, computeDeposit, LONG_STAY_MIN_NIGHTS } from "@/lib/pricing";
+import { computeTotalPrice, LONG_STAY_MIN_NIGHTS } from "@/lib/pricing";
 
 type BookingFormProps = {
   room: { id: string; price: number; capacity: number };
@@ -58,8 +58,7 @@ export function BookingForm({ room }: BookingFormProps) {
     const nights = Math.round((outDate.getTime() - inDate.getTime()) / (1000 * 60 * 60 * 24));
     if (nights <= 0) return null;
     const { subtotal, total, discounted } = computeTotalPrice(room.price, nights);
-    const deposit = computeDeposit(total);
-    return { nights, subtotal, total, discounted, deposit, remaining: total - deposit };
+    return { nights, subtotal, total, discounted };
   }, [checkIn, checkOut, room.price]);
 
   // Vérification de la disponibilité réelle de la chambre sur la période choisie
@@ -127,7 +126,7 @@ export function BookingForm({ room }: BookingFormProps) {
         return;
       }
 
-      toast.success("Réservation créée avec succès !");
+      toast.success("Demande de réservation envoyée !");
       router.push("/mon-compte/reservations");
       router.refresh();
     } finally {
@@ -234,17 +233,10 @@ export function BookingForm({ room }: BookingFormProps) {
             <span className="font-medium text-foreground">Montant total</span>
             <span className="font-semibold">{formatPrice(estimate.total)}</span>
           </div>
-          <div className="flex items-center justify-between">
-            <span className="text-muted-foreground">Acompte à régler (50 %)</span>
-            <span className="font-semibold">{formatPrice(estimate.deposit)}</span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-muted-foreground">Solde restant sur place</span>
-            <span>{formatPrice(estimate.remaining)}</span>
-          </div>
           <p className="mt-1 text-xs text-muted-foreground">
-            Montant définitif vérifié et confirmé à l&apos;étape suivante. En cas
-            d&apos;annulation, l&apos;acompte est remboursé sous 24h.
+            Aucun paiement maintenant : votre demande est d&apos;abord soumise à notre
+            équipe. Une fois validée, vous recevrez un e-mail avec un lien de paiement
+            sécurisé pour régler ce montant en une seule fois.
           </p>
         </div>
       )}
@@ -255,9 +247,9 @@ export function BookingForm({ room }: BookingFormProps) {
         className="w-full bg-olive text-olive-foreground hover:bg-olive/85"
       >
         {isSubmitting
-          ? "Réservation en cours…"
+          ? "Envoi de la demande…"
           : status === "authenticated"
-            ? "Réserver"
+            ? "Envoyer la demande de réservation"
             : "Se connecter pour réserver"}
       </Button>
     </form>

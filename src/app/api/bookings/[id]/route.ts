@@ -3,9 +3,11 @@ import { z } from "zod";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { computeRefundDueDate } from "@/lib/data/bookings";
+import { isRoomAvailable } from "@/lib/data/rooms";
+import { sendBookingValidatedEmail, sendBookingRefusedEmail } from "@/lib/email";
 
 const patchSchema = z.union([
-  z.object({ status: z.enum(["CONFIRMED", "CANCELLED"]) }),
+  z.object({ status: z.enum(["CONFIRMED", "REFUSED", "CANCELLED"]) }),
   z.object({ refundStatus: z.literal("REFUNDED") }),
 ]);
 
@@ -16,7 +18,13 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
   }
 
   const { id } = await params;
-  const booking = await prisma.booking.findUnique({ where: { id } });
+  const booking = await prisma.booking.findUnique({
+    where: { id },
+    include: {
+      room: { select: { name: true } },
+      user: { select: { name: true, email: true } },
+    },
+  });
   if (!booking) {
     return NextResponse.json({ error: "Réservation introuvable." }, { status: 404 });
   }
@@ -34,7 +42,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     return NextResponse.json({ error: "Non autorisé." }, { status: 403 });
   }
 
-  // Marquer l'acompte comme remboursé : action réservée à l'admin, une fois le
+  // Marquer le paiement comme remboursé : action réservée à l'admin, une fois le
   // remboursement (hors plateforme) effectué sous 24h.
   if ("refundStatus" in parsed.data) {
     if (!isAdmin) {
@@ -54,21 +62,46 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
   }
 
   if (isAdmin) {
-    // RG-09 : une réservation CANCELLED ne peut plus être reconfirmée.
-    if (booking.status === "CANCELLED" && parsed.data.status === "CONFIRMED") {
+    // Seule une demande EN ATTENTE peut être validée ou refusée par l'admin (section 3
+    // du cahier des charges d'évolution) ; les statuts terminaux ne peuvent pas revenir
+    // en arrière.
+    if (
+      (parsed.data.status === "CONFIRMED" || parsed.data.status === "REFUSED") &&
+      booking.status !== "PENDING"
+    ) {
       return NextResponse.json(
-        { error: "Une réservation annulée ne peut pas être reconfirmée." },
+        { error: "Seule une réservation en attente peut être validée ou refusée." },
         { status: 409 }
       );
     }
+
+    if (parsed.data.status === "CONFIRMED") {
+      // RG : re-vérifier la disponibilité au moment de la validation, pas seulement à la
+      // création — une autre demande sur les mêmes dates a pu être validée entre-temps.
+      const stillAvailable = await isRoomAvailable(
+        booking.roomId,
+        booking.checkIn,
+        booking.checkOut,
+        booking.id
+      );
+      if (!stillAvailable) {
+        return NextResponse.json(
+          {
+            error:
+              "Cette chambre n'est plus disponible sur ces dates (une autre réservation a été validée entre-temps). Refusez cette demande.",
+          },
+          { status: 409 }
+        );
+      }
+    }
   } else {
     // RG-08 : le client ne peut qu'annuler sa propre réservation, tant qu'elle n'est pas déjà
-    // passée ni déjà annulée.
+    // terminée (annulée, refusée) ni déjà passée.
     if (parsed.data.status !== "CANCELLED") {
       return NextResponse.json({ error: "Non autorisé." }, { status: 403 });
     }
-    if (booking.status === "CANCELLED") {
-      return NextResponse.json({ error: "Cette réservation est déjà annulée." }, { status: 409 });
+    if (booking.status === "CANCELLED" || booking.status === "REFUSED") {
+      return NextResponse.json({ error: "Cette réservation est déjà terminée." }, { status: 409 });
     }
     if (new Date(booking.checkIn) < new Date()) {
       return NextResponse.json(
@@ -78,20 +111,34 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     }
   }
 
-  // Annulation : l'acompte de 50 % déjà versé est remboursé sous 24h (politique simulée,
-  // hors plateforme de paiement — voir section 8 du cahier des charges).
-  const isCancelling = parsed.data.status === "CANCELLED" && booking.status !== "CANCELLED";
+  // Annulation d'une réservation déjà payée : remboursement (simulé, hors plateforme)
+  // sous 24h. Une réservation encore en attente ou validée-non-payée n'a rien prélevé,
+  // donc rien à rembourser.
+  const isCancellingPaidBooking =
+    parsed.data.status === "CANCELLED" && booking.status === "PAID";
 
   const updated = await prisma.booking.update({
     where: { id },
     data: {
       status: parsed.data.status,
-      ...(isCancelling && {
+      ...(isCancellingPaidBooking && {
         refundStatus: "PENDING",
         refundDueAt: computeRefundDueDate(),
       }),
     },
   });
+
+  // Notification e-mail au client : sendSafely() n'échoue jamais (erreurs interceptées
+  // et loguées), on peut donc l'attendre sans risquer de faire échouer la validation/le
+  // refus si Resend est indisponible (section 4 du cahier des charges), tout en évitant
+  // qu'un environnement serverless coupe l'exécution avant la fin de l'envoi.
+  if (isAdmin && parsed.data.status === "CONFIRMED") {
+    const origin = new URL(request.url).origin;
+    await sendBookingValidatedEmail({ ...booking, ...updated }, origin);
+  } else if (isAdmin && parsed.data.status === "REFUSED") {
+    const origin = new URL(request.url).origin;
+    await sendBookingRefusedEmail({ ...booking, ...updated }, origin);
+  }
 
   return NextResponse.json({ booking: updated });
 }
